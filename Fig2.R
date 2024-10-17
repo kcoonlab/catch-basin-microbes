@@ -1,24 +1,71 @@
-## Taxa bar plots
+library("phyloseq")
+library("RColorBrewer")
 
-ps.genus.rerooted <- tax_glom(ps.all.rerooted, "Genus", NArm = TRUE)
-ps.family.rerooted <- tax_glom(ps.all.rerooted, "Family", NArm = TRUE)
-ps.order.rerooted <- tax_glom(ps.all.rerooted, "Order", NArm = TRUE)
-ps.class.rerooted <- tax_glom(ps.all.rerooted, "Class", NArm = TRUE)
-ps.phylum.rerooted <- tax_glom(ps.all.rerooted, "Phylum", NArm = TRUE)
-saveRDS(ps.genus.rerooted, "ps.genus.rerooted")
-saveRDS(ps.family.rerooted, "ps.family.rerooted")
-saveRDS(ps.order.rerooted, "ps.order.rerooted")
-saveRDS(ps.class.rerooted, "ps.class.rerooted")
-saveRDS(ps.phylum.rerooted, "ps.phylum.rerooted")
-
-ps.phylum <- tax_glom(ps.all.rerooted, "Phylum", NArm = TRUE)
-ps.family <- tax_glom(ps.all.rerooted, taxrank = 'Family') # agglomerate taxa
-ps.genus <- tax_glom(ps.all.rerooted, taxrank = 'Genus') # agglomerate taxa
-saveRDS(ps.phylum, "ps_phylum_rerooted.rds")
-saveRDS(ps.family, "ps_family_rerooted.rds")
-saveRDS(ps.genus, "ps_genus_rerooted.rds")
+# Fig 2A. Taxa bar plots by phylum, per basin
 
 ps.phylum <- readRDS("ps_phylum_rerooted.rds")
+y1 <- ps.phylum
+y2 <- merge_samples(y1, "UCB") # merge samples by basin
+y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
+y4 <- psmelt(y3) # create dataframe from phyloseq object
+y4$Phylum <- as.character(y4$Phylum) #convert to character
+y4$Sample <- as.factor(y4$Sample)
+y4$Phylum[y4$Abundance < 0.01] <- "Taxa < 1% abund." #rename genera with < 1% abundance
+colourCount = length(unique(y4$Phylum))
+getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+y4$Phylum <- factor(y4$Phylum,levels=c("Acidobacteriota","Actinobacteriota","Bacteroidota","Campilobacterota","Cyanobacteria","Deinococcota","Desulfobacterota","Firmicutes","Fusobacteriota","Proteobacteria","Spirochaetota","unclassified.Bacteria","Verrucomicrobiota","Taxa < 1% abund."))
+p <- ggplot(data=y4, aes(x=Sample, y=Abundance))
+p + geom_bar(aes(fill=Phylum), stat="identity", position="stack") + scale_fill_manual(values=getPalette(colourCount)) + 
+  facet_wrap(~combined_separate, strip.position="bottom", scales="free_x") +
+  theme(panel.background = element_blank(), legend.position="right", axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        strip.background=element_blank()) + 
+  guides(fill=guide_legend(ncol=1)) +
+  xlab(NULL) + ylab("Relative abundance")
+
+# Fig 2B. Taxa bar plots by genus, per basin
+
+ps.genus <- readRDS("ps_genus_rerooted.rds")
+y1 <- ps.genus
+y2 <- merge_samples(y1, "UCB") # merge samples by basin
+y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
+y4 <- psmelt(y3) # create dataframe from phyloseq object
+y4$Genus <- as.character(y4$Genus) #convert to character
+y4$Sample <- as.factor(y4$Sample)
+y4$Genus[y4$Abundance < 0.03] <- "Taxa < 3% abund." #rename genera with < 3% abundance
+colourCount = length(unique(y4$Genus))
+getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+y4$Genus <- factor(y4$Genus,levels=c("acIII-A","Acinetobacter","Aeromonas","Arcobacter","Arenimonas","bacII-A","Bacteroides","betI-A","betIII-A","betVII-A","C39","Dechloromonas","Hydrogenophaga","Insolitispirillum","Lactococcus","Malikia","Nevskia","Novispirillum","Pseudarcobacter","Pseudomonas","Sulfuricurvum","Sulfurospirillum","Thauera","Zoogloea","unclassified.Alcaligenaceae","unclassified.alfVI","unclassified.alfVII","unclassified.Bacteroidales","unclassified.betI","unclassified.Comamonadaceae","unclassified.Enterobacterales","unclassified.Gammaproteobacteria","unclassified.Geobacteraceae","unclassified.Lachnospiraceae","unclassified.Methylococcaceae","unclassified.Microbacteriaceae","unclassified.Neisseriaceae","unclassified.Prevotellaceae","unclassified.Rhizobiaceae","unclassified.Rhodocyclaceae","unclassified.Veillonellales-Selenomonadales","Taxa < 3% abund."))
+p <- ggplot(data=y4, aes(x=Sample, y=Abundance))
+p + geom_bar(aes(fill=Genus), stat="identity", position="stack") + scale_fill_manual(values=getPalette(colourCount)) + 
+  facet_wrap(~combined_separate, strip.position="bottom", scales="free_x") +
+  theme(panel.background = element_blank(), legend.position="right", axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        strip.background=element_blank()) + 
+  guides(fill=guide_legend(ncol=2)) + 
+  xlab(NULL) + ylab("Relative abundance")
+
+
+
+                              
+
+#ps.genus.rerooted <- tax_glom(ps.all.rerooted, "Genus", NArm = TRUE)
+#ps.family.rerooted <- tax_glom(ps.all.rerooted, "Family", NArm = TRUE)
+#ps.order.rerooted <- tax_glom(ps.all.rerooted, "Order", NArm = TRUE)
+#ps.class.rerooted <- tax_glom(ps.all.rerooted, "Class", NArm = TRUE)
+#ps.phylum.rerooted <- tax_glom(ps.all.rerooted, "Phylum", NArm = TRUE)
+#saveRDS(ps.genus.rerooted, "ps.genus.rerooted")
+#saveRDS(ps.family.rerooted, "ps.family.rerooted")
+#saveRDS(ps.order.rerooted, "ps.order.rerooted")
+#saveRDS(ps.class.rerooted, "ps.class.rerooted")
+#saveRDS(ps.phylum.rerooted, "ps.phylum.rerooted")
+
+#ps.phylum <- tax_glom(ps.all.rerooted, "Phylum", NArm = TRUE)
+#ps.family <- tax_glom(ps.all.rerooted, taxrank = 'Family') # agglomerate taxa
+#ps.genus <- tax_glom(ps.all.rerooted, taxrank = 'Genus') # agglomerate taxa
+#saveRDS(ps.phylum, "ps_phylum_rerooted.rds")
+#saveRDS(ps.family, "ps_family_rerooted.rds")
+#saveRDS(ps.genus, "ps_genus_rerooted.rds")
+
+
 ps.family <- readRDS("ps_family_rerooted.rds")
 ps.genus <- readRDS("ps_genus_rerooted.rds")
 metadata <- read.table("metadata.txt", sep="\t", header=TRUE)
@@ -31,7 +78,7 @@ ps.phylum
 ps.family
 ps.genus
 
-library(RColorBrewer)
+
 
 sample_data(ps.input)$date %>% class
 date <- get_variable(ps.input,"date_code")
@@ -43,7 +90,7 @@ sample_data(ps.input)$combined_separate <- sample_data(ps.input)$combined_separa
 # Fig 2A. Taxa bar plots by phylum, per basin
 ps.input <- ps.phylum
 y1 <- ps.input
-(y2 = merge_samples(y1, "UCB")) # merge samples on sample variable of interest: cluster, basin, date, NewPastedVar
+y2 = merge_samples(y1, "UCB") # merge samples on sample variable of interest: cluster, basin, date, NewPastedVar
 y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
 y4 <- psmelt(y3) # create dataframe from phyloseq object
 y4$Phylum <- as.character(y4$Phylum) #convert to character
@@ -57,6 +104,7 @@ as.factor(y4$Phylum) %>% levels
 # by UCB
 y4$Phylum <- factor(y4$Phylum,levels=c("Acidobacteriota","Actinobacteriota","Bacteroidota","Campilobacterota","Cyanobacteria","Deinococcota","Desulfobacterota","Firmicutes","Fusobacteriota","Proteobacteria","Spirochaetota","unclassified.Bacteria","Verrucomicrobiota","Taxa < 1% abund."))
 #ucb
+p <- ggplot(data=y4, aes(x=Sample, y=Abundance))
 p + geom_bar(aes(fill=Phylum), stat="identity", position="stack") + scale_fill_manual(values=getPalette(colourCount)) + 
   facet_wrap(~combined_separate, strip.position="bottom", scales="free_x") +
   theme(panel.background = element_blank(), legend.position="right", axis.text.x=element_blank(), axis.ticks.x=element_blank(),
