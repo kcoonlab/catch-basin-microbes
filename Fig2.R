@@ -19,7 +19,7 @@ p + geom_bar(aes(fill=Phylum), stat="identity", position="stack") + scale_fill_m
   facet_wrap(~combined_separate, strip.position="bottom", scales="free_x") +
   theme(panel.background = element_blank(), legend.position="right", axis.text.x=element_blank(), axis.ticks.x=element_blank(),
         strip.background=element_blank()) + 
-  guides(fill=guide_legend(ncol=1)) +
+  guides(fill=guide_legend(ncol=2)) +
   xlab(NULL) + ylab("Relative abundance")
 
 ## Fig 2B. Taxa bar plots by genus, by basin
