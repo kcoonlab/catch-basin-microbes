@@ -8,7 +8,8 @@ library("plyr")
 
 ps.phylum <- readRDS("ps_phylum_rerooted.rds")
 y1 <- ps.phylum
-sample_data(y1)$cluster_philr <- as.factor(sample_data(y1)$cluster_philr)
+sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 1)] <- "A"
+sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 2)] <- "B"
 y2 <- merge_samples(y1, "cluster_philr") # merge samples by biotype
 y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
 y4 <- psmelt(y3) # create dataframe from phyloseq object
@@ -27,36 +28,25 @@ p + geom_bar(aes(fill=Phylum), stat="identity", position="stack") + scale_fill_m
 
 ## Fig 3B. Taxa bar plots by genus, by biotype
                               
-ps.input <- ps.genus
-y1 <- ps.input
-(y2 = merge_samples(y1, "date")) # merge samples on sample variable of interest: cluster, basin, date, NewPastedVar
+ps.genus <- readRDS("ps_genus_rerooted.rds")
+y1 <- ps.genus
+sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 1)] <- "A"
+sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 2)] <- "B"
+y2 = merge_samples(y1, "cluster_philr") # merge samples by biotype
 y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
 y4 <- psmelt(y3) # create dataframe from phyloseq object
 y4$Genus <- as.character(y4$Genus) #convert to character
 y4$Sample <- as.factor(y4$Sample)
-y4$Sample <- factor(y4$Sample, levels = c("4/15/21","6/11/21","6/25/21","7/9/21","7/23/21","8/6/21","8/27/21","9/17/21")) # only if grouping by date
-y4$Genus[y4$Abundance < 0.03] <- "Taxa < 3% abund." #rename genera with < 1% abundance. <3% genus ucb
+y4$Genus[y4$Abundance < 0.01] <- "Taxa < 1% abund." #rename genera with < 1% abundance
 colourCount = length(unique(y4$Genus))
-colourCount
 getPalette = colorRampPalette(brewer.pal(9, "Set1"))
-as.factor(y4$Genus) %>% levels
-# by cluster
-# y4$Genus <- factor(y4$Genus, levels=c("Acinetobacter","Aeromonas","alfIV-A","bacII-A","Bacteroides","betI-A","betIII-A","betVII-A","C39","Cloacibacterium","Dechloromonas","Hydrogenophaga","Malikia","Pseudarcobacter","Pseudomonas","Tolumonas","unclassified.Alcaligenaceae","unclassified.alfVI","unclassified.alfVII","unclassified.betI","unclassified.Comamonadaceae","unclassified.Enterobacterales","unclassified.Enterobacteriaceae","unclassified.Lachnospiraceae","unclassified.Methylococcaceae","unclassified.Microbacteriaceae","unclassified.Prevotellaceae","unclassified.Rhodocyclaceae","unclassified.Veillonellales-Selenomonadales","Taxa < 1% abund."))
-p <- ggplot(data=y4, aes(x=reorder(Sample,combined_separate), y=Abundance))
+y4$Genus <- factor(y4$Genus, levels=c("Acinetobacter","Aeromonas","alfIV-A","bacII-A","Bacteroides","betI-A","betIII-A","betVII-A","C39","Cloacibacterium","Dechloromonas","Hydrogenophaga","Malikia","Pseudarcobacter","Pseudomonas","Tolumonas","unclassified.Alcaligenaceae","unclassified.alfVI","unclassified.alfVII","unclassified.betI","unclassified.Comamonadaceae","unclassified.Enterobacterales","unclassified.Enterobacteriaceae","unclassified.Lachnospiraceae","unclassified.Methylococcaceae","unclassified.Microbacteriaceae","unclassified.Prevotellaceae","unclassified.Rhodocyclaceae","unclassified.Veillonellales-Selenomonadales","Taxa < 1% abund."))
 p <- ggplot(data=y4, aes(x=Sample, y=Abundance))
-# date, cluster
 p + geom_bar(aes(fill=Genus), stat="identity", position="stack") + scale_fill_manual(values=getPalette(colourCount)) + 
   theme(panel.background = element_blank(), legend.position="right", axis.ticks.x=element_blank()) + 
-  guides(fill=guide_legend(ncol=1))+ #UCB 2 cols, date 1 col, cluster 2cols
+  guides(fill=guide_legend(ncol=2)) +
   xlab(NULL) + ylab("Relative abundance")
-
-
-
-
-
-                              
-
-                              
+                
 ## Fig 3C. ASVs by biotype
 
 ps.all.rerooted <- readRDS("ps.all.rerooted.rds")
