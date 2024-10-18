@@ -23,7 +23,6 @@ colourCount = length(unique(y4$Phylum))
 getPalette = colorRampPalette(brewer.pal(9, "Set1"))
 y4$Phylum <- factor(y4$Phylum,levels=c("Acidobacteriota","Actinobacteriota","Bacteroidota","Campilobacterota","Cyanobacteria","Deinococcota","Desulfobacterota","Firmicutes","Myxococcota","Proteobacteria","Spirochaetota","Verrucomicrobiota","Taxa < 1% abund."))
 p <- ggplot(data=y4, aes(x=Sample, y=Abundance))
-#date, cluster
 p + geom_bar(aes(fill=Phylum), stat="identity", position="stack") + scale_fill_manual(values=getPalette(colourCount)) + 
   theme(panel.background = element_blank(), legend.position="right", axis.ticks.x=element_blank()) + 
   guides(fill=guide_legend(ncol=2)) +
@@ -97,7 +96,6 @@ relabund.sums.metadata <- relabund.sums.metadata[myvars]
 C39_cluster <- ggplot(data=relabund.sums.metadata, aes(x=cluster_philr, y=C39)) +
   geom_boxplot(show.legend=FALSE, fill="dark grey") +
   geom_signif(comparisons=list(c("1","2")), map_signif_level=TRUE)+
-  # geom_dotplot(binaxis='y', stackdir='center', binpositions="all", stackgroups=TRUE, aes()) +
   labs(y = "Relative abundance C39")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))+
@@ -120,7 +118,6 @@ relabund.sums.metadata <- relabund.sums.metadata[myvars]
 Firmicutes_cluster <- ggplot(data=relabund.sums.metadata, aes(x=cluster_philr, y=Firmicutes)) +
   geom_boxplot(show.legend=FALSE, fill="dark grey") +
   geom_signif(comparisons=list(c("1","2")), map_signif_level=TRUE)+
-  # geom_dotplot(binaxis='y', stackdir='center', binpositions="all", stackgroups=TRUE, aes()) +
   labs(y = "Relative abundance Firmicutes")+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))+
