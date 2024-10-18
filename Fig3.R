@@ -1,12 +1,15 @@
-library("phyloseq")
-library("RColorBrewer")
-library("ggsignif")
-library("tibble")
-library("plyr")
+## Fig 3. Catch basin microbiota biotypes identified by PAM clustering
 
-## Fig 3A. Taxa bar plots by phylum, by biotype
+library(phyloseq)
+library(RColorBrewer)
+library(ggsignif)
+library(tibble)
+library(plyr)
 
-ps.phylum <- readRDS("ps_phylum_rerooted.rds")
+## Fig 3A. Taxa bar plots by biotype (phylum level)
+
+ps.all <- readRDS("input-files/ps.all.rds")
+ps.phylum <- tax_glom(ps.all, "Phylum", NArm = TRUE)
 y1 <- ps.phylum
 sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 1)] <- "A"
 sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 2)] <- "B"
@@ -26,9 +29,9 @@ p + geom_bar(aes(fill=Phylum), stat="identity", position="stack") + scale_fill_m
   guides(fill=guide_legend(ncol=2)) +
   xlab(NULL) + ylab("Relative abundance")
 
-## Fig 3B. Taxa bar plots by genus, by biotype
+## Fig 3B. Taxa bar plots by biotype (genus level)
                               
-ps.genus <- readRDS("ps_genus_rerooted.rds")
+ps.genus <- tax_glom(ps.all, "Genus", NArm = TRUE)
 y1 <- ps.genus
 sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 1)] <- "A"
 sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 2)] <- "B"
@@ -49,8 +52,7 @@ p + geom_bar(aes(fill=Genus), stat="identity", position="stack") + scale_fill_ma
                 
 ## Fig 3C. ASVs by biotype
 
-ps.all.rerooted <- readRDS("ps.all.rerooted.rds")
-metadata <- data.frame(sample_data(ps.all.rerooted))
+metadata <- data.frame(sample_data(ps.all))
 metadata <- subset(metadata, sample_control == "sample")
 metadata$cluster_philr <- as.factor(metadata$cluster_philr)
 cluster_features <- ggplot(data=na.omit(metadata[,c("cluster_philr","features_unrar")]), aes(x=cluster_philr, y=features_unrar)) + 
@@ -81,16 +83,17 @@ kruskal.test(metadata$shannon_unrar, metadata$cluster_philr)
 
 ## Fig 3E. C39 relative abundance by biotype
 
-ps.all.rerooted <- readRDS("ps.all.rerooted.rds")
-ps.all.rerooted.rel  = transform_sample_counts(ps.all.rerooted, function(x) x / sum(x) )
-ps.all.C39 = subset_taxa(ps.all.rerooted.rel, Genus=="C39")
-metadata.add <- data.frame(sample_data(ps.all.rerooted.rel))
+ps.all.rel  = transform_sample_counts(ps.all, function(x) x / sum(x) )
+ps.all.rel.C39 = subset_taxa(ps.all.rel, Genus=="C39")
+metadata.add <- data.frame(sample_data(ps.all.rel))
 metadata.add <- metadata.add %>% rownames_to_column(var="sampleid")
-relabund.sums.C39 <- as.data.frame(sample_sums(ps.all.C39))
+relabund.sums.C39 <- as.data.frame(sample_sums(ps.all.rel.C39))
 relabund.sums.C39 <- relabund.sums.C39 %>% rownames_to_column(var="sampleid")
 relabund.sums.metadata <- join_all(list(relabund.sums.C39, metadata.add), by='sampleid',type='left')
-names(relabund.sums.metadata)[names(relabund.sums.metadata) == 'sample_sums(ps.all.C39)'] <- 'C39'
+names(relabund.sums.metadata)[names(relabund.sums.metadata) == 'sample_sums(ps.all.rel.C39)'] <- 'C39'
 relabund.sums.metadata$cluster_philr <- as.factor(relabund.sums.metadata$cluster_philr)
+myvars <- c("C39", "cluster_philr")
+relabund.sums.metadata <- relabund.sums.metadata[myvars]
 C39_cluster <- ggplot(data=relabund.sums.metadata, aes(x=cluster_philr, y=C39)) +
   geom_boxplot(show.legend=FALSE, fill="dark grey") +
   geom_signif(comparisons=list(c("1","2")), map_signif_level=TRUE)+
@@ -104,17 +107,16 @@ kruskal.test(relabund.sums.metadata$C39, relabund.sums.metadata$cluster_philr)
 
 ## Fig 3F. Firmicutes relative abundance by biotype
 
-ps.all.rerooted <- readRDS("ps.all.rerooted.rds")
-ps.all.rerooted.rel  = transform_sample_counts(ps.all.rerooted, function(x) x / sum(x) )
-ps.all.Firmicutes = subset_taxa(ps.all.rerooted.rel, Phylum=="Firmicutes")
-metadata.add <- data.frame(sample_data(ps.all.rerooted.rel))
+ps.all.rel.Firmicutes = subset_taxa(ps.all.rel, Phylum=="Firmicutes")
+metadata.add <- data.frame(sample_data(ps.all.rel))
 metadata.add <- metadata.add %>% rownames_to_column(var="sampleid")
-relabund.sums.Firmicutes <- as.data.frame(sample_sums(ps.all.Firmicutes))
+relabund.sums.Firmicutes <- as.data.frame(sample_sums(ps.all.rel.Firmicutes))
 relabund.sums.Firmicutes <- relabund.sums.Firmicutes %>% rownames_to_column(var="sampleid")
 relabund.sums.metadata <- join_all(list(relabund.sums.Firmicutes, metadata.add), by='sampleid',type='left')
 names(relabund.sums.metadata)[names(relabund.sums.metadata) == 'sample_sums(ps.all.Firmicutes)'] <- 'Firmicutes'
 relabund.sums.metadata$cluster_philr <- as.factor(relabund.sums.metadata$cluster_philr)
-
+myvars <- c("Firmicutes", "cluster_philr")
+relabund.sums.metadata <- relabund.sums.metadata[myvars]
 Firmicutes_cluster <- ggplot(data=relabund.sums.metadata, aes(x=cluster_philr, y=Firmicutes)) +
   geom_boxplot(show.legend=FALSE, fill="dark grey") +
   geom_signif(comparisons=list(c("1","2")), map_signif_level=TRUE)+
