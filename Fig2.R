@@ -1,9 +1,12 @@
-library("phyloseq")
-library("RColorBrewer")
+## Fig 2. Bacterial diversity in water sampled from study catch basins
 
-## Fig 2A. Taxa bar plots by phylum, by basin
+library(phyloseq)
+library(RColorBrewer)
 
-ps.phylum <- readRDS("ps_phylum_rerooted.rds")
+## Fig 2A. Taxa bar plots by basin (phylum level)
+
+ps.all <- readRDS("input-files/ps.all.rds")
+ps.phylum <- tax_glom(ps.all, "Phylum", NArm = TRUE)
 y1 <- ps.phylum
 y2 <- merge_samples(y1, "UCB") # merge samples by basin
 y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
@@ -22,9 +25,9 @@ p + geom_bar(aes(fill=Phylum), stat="identity", position="stack") + scale_fill_m
   guides(fill=guide_legend(ncol=2)) +
   xlab(NULL) + ylab("Relative abundance")
 
-## Fig 2B. Taxa bar plots by genus, by basin
+## Fig 2B. Taxa bar plots by basin (genus level)
 
-ps.genus <- readRDS("ps_genus_rerooted.rds")
+ps.genus <- tax_glom(ps.all, "Genus", NArm = TRUE)
 y1 <- ps.genus
 y2 <- merge_samples(y1, "UCB") # merge samples by basin
 y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
@@ -43,9 +46,8 @@ p + geom_bar(aes(fill=Genus), stat="identity", position="stack") + scale_fill_ma
   guides(fill=guide_legend(ncol=2)) + 
   xlab(NULL) + ylab("Relative abundance")
 
-## Fig 2C. Taxa bar plots by phylum, by sampling date
+## Fig 2C. Taxa bar plots by sampling date (phylum level)
 
-ps.phylum <- readRDS("ps_phylum_rerooted.rds")
 y1 <- ps.phylum
 y2 <- merge_samples(y1, "date") # merge samples by sampling date
 y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
@@ -63,9 +65,8 @@ p + geom_bar(aes(fill=Phylum), stat="identity", position="stack") + scale_fill_m
   guides(fill=guide_legend(ncol=1))+ #UCB 2 cols, date 1 col
   xlab(NULL) + ylab("Relative abundance")
 
-## Fig 2D. Taxa bar plots by genus, by sampling date
+## Fig 2D. Taxa bar plots by sampling date (genus level)
 
-ps.genus <- readRDS("ps_genus_rerooted.rds")
 y1 <- ps.genus
 y2 <- merge_samples(y1, "date") # merge samples by sampling date
 y3 <- transform_sample_counts(y2, function(x) x/sum(x)) #get abundance in %
