@@ -1,5 +1,3 @@
-## Table 2.  Effects of sampling date, water quality, mosquito productivity on microbiota diversity
-
 library("phyloseq")
 library("qiime2R")
 library("microbiome")
@@ -9,45 +7,11 @@ library("dplyr")
 library("clusterSim")
 library("ade4")
 
-ps.all <- qza_to_phyloseq("table_analysis.qza", 
-                          "mafft-fasttree-output/rooted_tree.qza", 
-                          "taxass_taxonomy_98.qza", 
-                          "metadata.txt")
-
-# re-root fasttree tree # https://github.com/joey711/phyloseq/issues/597
-# export mafft tree as newick file
-qiime tools export \
---input-path tree.qza \
---output-path exported-tree
-
-library(phytools)
-pick_new_outgroup <- function(tree.unrooted){
-  require("magrittr")
-  require("data.table")
-  require("ape") # ape::Ntip
-  # tablify parts of tree that we need.
-  treeDT <-
-    cbind(
-      data.table(tree.unrooted$edge),
-      data.table(length = tree.unrooted$edge.length)
-    )[1:Ntip(tree.unrooted)] %>%
-    cbind(data.table(id = tree.unrooted$tip.label))
-  # Take the longest terminal branch as outgroup
-  new.outgroup <- treeDT[which.max(length)]$id
-  return(new.outgroup)
-}
-unrooted_qiime_default<-read.newick(file="mafft-fasttree-output/exported-tree/tree.nwk")
-new.outgroup = pick_new_outgroup(unrooted_qiime_default)
-rootedTree = ape::root(unrooted_qiime_default, outgroup=new.outgroup, resolve.root=TRUE)
-newlyrootedTree<-read_tree(rootedTree, errorIfNULL=FALSE)
-ps.all.rerooted <- phyloseq(otu_table(ps.all), tax_table(ps.all), sample_data(ps.all), newlyrootedTree)
-saveRDS(ps.all.rerooted,"ps.all.rerooted.rds")
-ps.all <- readRDS("ps.all.rerooted.rds")
-
-
+## Table 2.  Effects of sampling date, water quality, mosquito productivity on microbiota diversity
 
 ## Table 2A  PERMANOVA tests using PhILR distances between samples
 
+ps.all <- readRDS("ps.all.rerooted.rds")
 # running permanovas on whole dataset
 # can't actually do this on variables that have any NAs.
 # the variables without NAs are the ones that are always the same for each UCB
