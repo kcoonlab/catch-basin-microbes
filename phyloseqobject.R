@@ -6,7 +6,7 @@ library(ggplot2)
 library(qiime2R)
 
 ps.all <- qza_to_phyloseq("table_analysis.qza", 
-                           "mafft-fasttree-output/rooted_tree.qza", 
+                           "rooted_tree.qza", 
                            "taxass_taxonomy_98.qza", 
                            "metadata.txt")
 ps.all
