@@ -2,6 +2,7 @@
 
 library(phyloseq)
 library(RColorBrewer)
+library(ggplot2)
 
 ## Fig 2A. Taxa bar plots by basin (phylum level)
 
