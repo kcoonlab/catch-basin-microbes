@@ -1,6 +1,3 @@
-???
-ps.all.rerooted <- phyloseq(otu_table(ps.all), tax_table(ps.all), sample_data(ps.all), newlyrootedTree)
-
 ## Table 2.  Effects of sampling date, water quality, mosquito productivity on microbiota diversity
 
 library(phyloseq)
@@ -12,17 +9,19 @@ library(tidyr)
 
 ## Table 2A  PERMANOVA tests using PhILR distances between samples
 
-set.seed(100)
+set.seed(123)
 ps.all <- readRDS("input-files/ps.all.rds")
 sample_data(ps.all)$sample.id <- sample_names(ps.all)
 
 # running with just individual NA samples cut (not all instances of a UCB with an NA anywhere)
 NA %in% sample_data(ps.all)$pH #row 39
-NA %in% sample_data(ps.all)$Temp[129] # row 39,129
-NA %in% sample_data(ps.all)$DO[39] # row 39
-NA %in% sample_data(ps.all)$Sal[71] # row 39, 71
-NA %in% sample_data(ps.all)$Cond[39] # row 39
-sample_data(ps.all)[129,] #sample.id: row 39=B_73, row 71=C_61, row129=F_56
+NA %in% sample_data(ps.all)$Temp # row 39,129
+NA %in% sample_data(ps.all)$DO # row 39
+NA %in% sample_data(ps.all)$Sal # row 39, 71
+NA %in% sample_data(ps.all)$Cond # row 39
+sample_data(ps.all)[39,] #sample.id = B_73
+sample_data(ps.all)[71,] #sample.id = C_61
+sample_data(ps.all)[129,] #sample.id = F_56
 
 # Take out the 3 individual samples that have NAs, and use that remaining set for the permanovas
 ps.most <- subset_samples(ps.all, !sample.id %in% c("B_73","C_61","F_56"))
