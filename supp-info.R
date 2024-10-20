@@ -5,6 +5,7 @@ library(dplyr)
 library(tree)
 library(nlme)
 library(phyloseq)
+library(ape)
 
 
 
@@ -346,7 +347,88 @@ WQ.data.by.date <- WQ.data.by.date %>% arrange(factor(Sampling.date, levels = c(
 
 ## Table S2 **See input-files/metadata.txt**
 
-## Table S3. XXX.
+***## Table S3. XXX.
+
+## Data aggregated by basin
+
+WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data["Rainfall"][WQ.data["Rainfall"]=="trace"] <- 0.001
+WQ.data$Rainfall <- as.numeric(WQ.data$Rainfall)
+WQ.data.by.basin <- WQ.data %>%
+  group_by(Basin.id) %>%
+  dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
+            Pupae.sd = sd(Pupae.abund, na.rm=TRUE),
+            Pupae.min = min(Pupae.abund, na.rm=TRUE),
+            Pupae.max = max(Pupae.abund, na.rm=TRUE),
+            Pupae.prev = sum(Pupae.pres>=1, na.rm=TRUE)/sum(Pupae.pres>=0, na.rm=TRUE),
+            Methoprene.success = sum(Methoprene.success==1, na.rm=TRUE)/sum(Methoprene.success>=0,na.rm=TRUE), 
+            Rainfall.avg = mean(Rainfall, na.rm=TRUE),
+            Rainfall.sd = sd(Rainfall, na.rm=TRUE),
+            Rainfall.min = min(Rainfall, na.rm=TRUE),
+            Rainfall.max = max(Rainfall, na.rm=TRUE),
+            pH.avg = mean(pH, na.rm=TRUE),
+            pH.sd = sd(pH, na.rm=TRUE),
+            pH.min = min(pH, na.rm=TRUE),
+            pH.max = max(pH, na.rm=TRUE),
+            Temp.C.avg = mean(Temp.C, na.rm=TRUE),
+            Temp.C.sd = sd(Temp.C, na.rm=TRUE),
+            Temp.C.min = min(Temp.C, na.rm=TRUE),
+            Temp.C.max = max(Temp.C, na.rm=TRUE),
+            Cond.avg = mean(Cond, na.rm=TRUE),
+            Cond.sd = sd(Cond, na.rm=TRUE),
+            Cond.min = min(Cond, na.rm=TRUE),
+            Cond.max = max(Cond, na.rm=TRUE),
+            DO.avg = mean(DO, na.rm=TRUE),
+            DO.sd = sd(DO, na.rm=TRUE),
+            DO.min = min(DO, na.rm=TRUE),
+            DO.max = max(DO, na.rm=TRUE),
+            Sal.avg = mean(Sal, na.rm=TRUE),
+            Sal.sd = sd(Sal, na.rm=TRUE),
+            Sal.min = min(Sal, na.rm=TRUE),
+            Sal.max = max(Sal, na.rm=TRUE)
+            )
+
+WQ.data.by.basin$Basin.type <- c("separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined")
+WQ.data.by.basin$Basin.flowgroup <- c("MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","DonaldBanta","DonaldBanta","DonaldBanta","DonaldBanta","DonaldBanta","DonaldBanta","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","DonaldBanta","MinerEvanstonRammer","MinerEvanstonRammer","Stratford","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Stratford","Stratford","Gibbons","Gibbons","Gibbons","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","Gibbons","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle")
+WQ.data.by.basin$Basin.lon <- c(-87.957901,-87.957907,-87.957481,-87.957248,-87.957257,-87.956212,-87.955063,-87.954987,-87.955064,-87.954972,-87.955073,-87.954946,-87.95384,-87.953765,-87.953832,-87.953746,-87.954378,-87.954381,-87.953833,-87.953712,-87.953743,-87.952483,-87.952659,-87.95254,-87.952665,-87.952544,-87.952664,-87.957397,-87.956346,-87.954944,-87.9622283,-87.96229318,-87.96231902,-87.96222278,-87.9623084,-87.96220848,-87.96220773,-87.96231615,-87.96118708,-87.96128735,-87.96217608,-87.96222302,-87.96231955,-87.96237833,-87.96229127,-87.96109237,-87.96120367,-87.96107445,-87.96582388,-87.96585632,-87.96571188,-87.96835267,-87.96847103,-87.96832385,-87.96844195,-87.96723588,-87.96715035,-87.96706973,-87.96121885,-87.96116213)
+WQ.data.by.basin$Basin.lat <- c(42.085423,42.085404,42.084462,42.084567,42.084494,42.084527,42.083446,42.083488,42.08274,42.08276,42.081956,42.081948,42.082057,42.082044,42.083042,42.083024,42.084479,42.084463,42.084031,42.084027,42.084108,42.08413,42.083495,42.083501,42.081681,42.081668,42.083969,42.082795,42.084539,42.084451,42.08059342,42.08061185,42.07995083,42.07996232,42.0791431,42.07914033,42.07905157,42.0790679,42.07722598,42.07727365,42.07733793,42.07735468,42.07737213,42.07733773,42.07726987,42.07638237,42.07570793,42.07569713,42.0775284,42.07762897,42.07763798,42.07911363,42.07911247,42.08001807,42.08003452,42.07917337,42.07909997,42.079124,42.07906305,42.0793045)
+WQ.data.by.basin <- WQ.data.by.basin[, c(1,32:35,2:31)]
+
+data.dists <- as.matrix(dist(cbind(WQ.data.by.basin$Basin.lon, WQ.data.by.basin$Basin.lat)))
+data.dists.inv <- 1/data.dists
+diag(data.dists.inv) <- 0
+Moran.I(WQ.data.by.basin$Pupae.prev, data.dists.inv, na.rm = TRUE)
+Moran.I(WQ.data.by.basin$Pupae.abund.avg, data.dists.inv, na.rm = TRUE)
+Moran.I(WQ.data.by.basin$Methoprene.success, data.dists.inv, na.rm = TRUE) 
+
+metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
+metadata <- subset(metadata, sample_control=="sample")
+metadata.byUCB <- metadata %>% 
+  group_by(UCB) %>%
+  dplyr::summarize(shannon_unrar.avg = mean(shannon_unrar, na.rm=TRUE),
+  				   richness.avg = mean(features_unrar, na.rm=TRUE),
+  				   C39.avg = mean(C39, na.rm=TRUE),
+  				   Proteo.avg = mean(Proteobacteria, na.rm=TRUE),
+  				   Firmicutes.avg = mean(Firmicutes, na.rm=TRUE))
+  				   	   
+metadata <- metadata[!duplicated(metadata$UCB),]
+data <- merge(metadata, metadata.byUCB, by = "UCB")
+data.dists <- as.matrix(dist(cbind(data$lon, data$lat)))
+data.dists.inv <- 1/data.dists
+data.dists.inv[sapply(data.dists.inv, is.infinite)] <- 0
+diag(data.dists.inv) <- 0
+Moran.I(data$shannon_unrar.avg, data.dists.inv, na.rm = TRUE)
+Moran.I(data$richness.avg, data.dists.inv, na.rm = TRUE)
+Moran.I(data$C39.avg, data.dists.inv, na.rm = TRUE)
+Moran.I(data$Firmicutes.avg, data.dists.inv, na.rm = TRUE)
+Moran.I(data$Proteo.avg, data.dists.inv, na.rm = TRUE)
+
+data.dists <- as.matrix(dist(cbind(samples.UCBgroup$lon, samples.UCBgroup$lat)))
+data.dists.inv <- 1/data.dists
+diag(data.dists.inv) <- 0
+mantel(dist.UCBgroup.philr, data.dists.inv)	 #p-value = 1, no spatial autocorrelation
+
+
 
 ## Table S4. Effects of methoprene treatment on mosquito productivity
 
