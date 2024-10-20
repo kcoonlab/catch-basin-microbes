@@ -6,8 +6,8 @@ library(nlme)
 ## Table 1A. Linear regression analyses with data aggregated by basin
 
 WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
-WQ.data["rain"][cook["rain"]=="trace"] <- 0.001
-WQ.data$rain <- as.numeric(cook$rain)
+WQ.data["rain"][WQ.data["rain"]=="trace"] <- 0.001
+WQ.data$rain <- as.numeric(WQ.data$rain)
 WQ.data.by.basins <- WQ.data %>%
   group_by(UCB) %>%
   dplyr::summarize(Pupae.avg = mean(Pupae, na.rm=TRUE),
@@ -79,7 +79,8 @@ WQ.data.by.date <- WQ.data %>%
             Cond.avg = mean(Cond, na.rm=TRUE),
             Cond.sd = sd(Cond, na.rm=TRUE),
             Cond.min = min(Cond, na.rm=TRUE),
-            Cond.max = max(Cond, na.rm=TRUE)
+            Cond.max = max(Cond, na.rm=TRUE),
+            Rainfall = mean(rain, na.rm=TRUE)
             )
 WQ.data.by.date[sapply(WQ.data.by.date, is.nan)] <- NA
 WQ.data.by.date[sapply(WQ.data.by.date, is.infinite)] <- NA
@@ -89,16 +90,20 @@ summary(lm(Pupae.prev ~ Temp.C.avg, data = WQ.data.by.date))
 summary(lm(Pupae.prev ~ Cond.avg, data = WQ.data.by.date))
 summary(lm(Pupae.prev ~ DO.avg, data = WQ.data.by.date))
 summary(lm(Pupae.prev ~ Sal.avg, data = WQ.data.by.date))
+summary(lm(Pupae.prev ~ Rainfall, data = WQ.data.by.date))
 
 summary(lm(Pupae.avg ~ pH.avg, data = WQ.data.by.date))
 summary(lm(Pupae.avg ~ Temp.C.avg, data = WQ.data.by.date))
 summary(lm(Pupae.avg ~ Cond.avg, data = WQ.data.by.date))
 summary(lm(Pupae.avg ~ DO.avg, data = WQ.data.by.date))
 summary(lm(Pupae.avg ~ Sal.avg, data = WQ.data.by.date))
+summary(lm(Pupae.avg ~ Rainfall, data = WQ.data.by.date))
 
 ## Table 1C. Linear mixed-effects models with unaggregated data (observations only where pupae were present)
 
-WQ.data.pupaepresent <- subset(WQ.data.pupaepresent, Pupae > "0")
+set.seed(123)
+
+WQ.data.pupaepresent <- subset(WQ.data, Pupae > "0")
 WQ.data.pupaepresent$Datefactor <- WQ.data.pupaepresent$Date %>% as.factor
 
 WQ.data.pupaepresent.pH <- subset(WQ.data.pupaepresent, !is.na(pH)==TRUE)
