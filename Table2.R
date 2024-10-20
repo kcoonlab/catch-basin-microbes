@@ -43,6 +43,7 @@ adonis2(dist.most.philr ~ Temp, data=samples.most, permutations=perm_design)
 adonis2(dist.most.philr ~ DO, data=samples.most, permutations=perm_design)
 adonis2(dist.most.philr ~ Sal, data=samples.most, permutations=perm_design)
 adonis2(dist.most.philr ~ Cond, data=samples.most, permutations=perm_design)
+
 permutest(betadisper(dist.most.philr, samples.most$date))
 permutest(betadisper(dist.most.philr, samples.most$Temp))
 permutest(betadisper(dist.most.philr, samples.most$Sal))
@@ -60,10 +61,11 @@ perm_design <- how(within = Within(type = "series"),
 
 adonis2(dist.pupaepresent.philr ~ Pupae_pa, data=samples.pupaepresent, permutations=perm_design)
 adonis2(dist.pupaepresent.philr ~ Pupae, data=samples.pupaepresent, permutations=perm_design)
+
 permutest(betadisper(dist.pupaepresent.philr, samples.pupaepresent$Pupae_pa))
 permutest(betadisper(dist.pupaepresent.philr, samples.pupaepresent$Pupae))
 
-***## Table 2B  PERMANOVA tests using PhILR distances between samples aggregated by basin
+## Table 2B  PERMANOVA tests using PhILR distances between samples aggregated by basin
 
 ps.all.byUCB <- merge_samples(ps.all,"UCB")
 sample_data(ps.all.byUCB)$Flowgroup_coarse <- c("MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","DonaldBanta","DonaldBanta","DonaldBanta","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","DonaldBanta","MinerEvanstonRammer","MinerEvanstonRammer","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle")
@@ -71,15 +73,13 @@ sample_data(ps.all.byUCB)$combined_separate <- c("separate","separate","separate
 samples.all.byUCB <- as.data.frame(as.matrix(sample_data(ps.all.byUCB)))
 
 ps.all.byUCB.pseudocount <- ps.all.byUCB
-otu_table(ps.all.byUCB.pseudocount) <- otu_table(ps.all.byUCB) + 1
-ps.all.byUCB.philr <- philr(ps.all.byUCB.pseudocount, part.weights='enorm.x.gm.counts', ilr.weights='blw.sqrt') ###Error here has to do with need to root the tree (see above)!
+otu_table(ps.all.byUCB.pseudocount) <- t(otu_table(ps.all.byUCB) + 1)
+ps.all.byUCB.philr <- philr(ps.all.byUCB.pseudocount, part.weights='enorm.x.gm.counts', ilr.weights='blw.sqrt')
 dist.all.byUCB.philr <- dist(ps.all.byUCB.philr, method="euclidean")
 #saveRDS(dist.all.byUCB.philr, "dist_all_byUCB_philr_Table2.rds")
 
-[...]
+adonis2(dist.all.byUCB.philr ~ combined_separate, data=samples.all.byUCB)
+adonis2(dist.all.byUCB.philr ~ Flowgroup_coarse, data=samples.all.byUCB)
 
-
-adonis2(dist.UCBgroup.philr ~ combined_separate, data=samples.UCBgroup)
-adonis2(dist.UCBgroup.philr ~ Flowgroup_coarse, data=samples.UCBgroup)
-permutest(betadisper(dist.UCBgroup.philr, samples.UCBgroup$combined_separate))
-permutest(betadisper(dist.UCBgroup.philr, samples.UCBgroup$Flowgroup_coarse))
+permutest(betadisper(dist.all.byUCB.philr, samples.all.byUCB$combined_separate))
+permutest(betadisper(dist.all.byUCB.philr, samples.all.byUCB$Flowgroup_coarse))
