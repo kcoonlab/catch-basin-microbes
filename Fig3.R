@@ -9,7 +9,7 @@ library(plyr)
 
 ## Fig 3A. Taxa bar plots by biotype (phylum level)
 
-ps.all <- readRDS("input-files/ps.all.rds")
+ps.final <- readRDS("input-files/ps.final.rds")
 ps.phylum <- tax_glom(ps.all, "Phylum", NArm = TRUE)
 y1 <- ps.phylum
 sample_data(y1)$cluster_philr[which(sample_data(y1)$cluster_philr == 1)] <- "A"
@@ -52,10 +52,10 @@ p + geom_bar(aes(fill=Genus), stat="identity", position="stack") + scale_fill_ma
                 
 ## Fig 3C. ASVs by biotype
 
-metadata <- data.frame(sample_data(ps.all))
+metadata <- data.frame(sample_data(ps.final))
 metadata <- subset(metadata, sample_control == "sample")
-metadata$cluster_philr <- as.factor(metadata$cluster_philr)
-cluster_features <- ggplot(data=na.omit(metadata[,c("cluster_philr","features_unrar")]), aes(x=cluster_philr, y=features_unrar)) + 
+metadata$Biotype <- as.factor(metadata$Biotype)
+cluster_features <- ggplot(data=na.omit(metadata[,c("Biotype","ASV.richness")]), aes(x=Biotype, y=ASV.richness)) + 
   geom_boxplot(show.legend=FALSE, fill="dark grey")+
   geom_signif(comparisons=list(c("1","2")), map_signif_level=TRUE)+
   theme(axis.title = element_text(size=13), 
@@ -65,11 +65,11 @@ cluster_features <- ggplot(data=na.omit(metadata[,c("cluster_philr","features_un
   ylab("ASV richness")+ xlab(NULL)+
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B"))
 cluster_features
-kruskal.test(metadata$features_unrar, metadata$cluster_philr)                              
+kruskal.test(metadata$ASV.richness, metadata$Biotype)                              
 
 ## Fig 3D. Shannon index by biotype
 
-cluster_shannon <-ggplot(data=na.omit(metadata[,c("cluster_philr","shannon_unrar")]), aes(x=cluster_philr, y=shannon_unrar)) + 
+cluster_shannon <-ggplot(data=na.omit(metadata[,c("Biotype","Shannon")]), aes(x=Biotype, y=Shannon)) + 
   geom_boxplot(show.legend=FALSE, fill="dark grey")+
   geom_signif(comparisons=list(c("1","2")), map_signif_level=TRUE)+
   theme(axis.title = element_text(size=13), 
@@ -79,22 +79,22 @@ cluster_shannon <-ggplot(data=na.omit(metadata[,c("cluster_philr","shannon_unrar
   ylab("Shannon index")+ xlab(NULL)+
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B"))
 cluster_shannon
-kruskal.test(metadata$shannon_unrar, metadata$cluster_philr)
+kruskal.test(metadata$Shannon, metadata$Biotype)
 
 ## Fig 3E. C39 relative abundance by biotype
 
-ps.all.rel  = transform_sample_counts(ps.all, function(x) x / sum(x) )
-ps.all.rel.C39 = subset_taxa(ps.all.rel, Genus=="C39")
-metadata.add <- data.frame(sample_data(ps.all.rel))
+ps.final.rel  = transform_sample_counts(ps.final, function(x) x / sum(x) )
+ps.final.rel.C39 = subset_taxa(ps.final.rel, Genus=="C39")
+metadata.add <- data.frame(sample_data(ps.final.rel))
 metadata.add <- metadata.add %>% rownames_to_column(var="sampleid")
-relabund.sums.C39 <- as.data.frame(sample_sums(ps.all.rel.C39))
+relabund.sums.C39 <- as.data.frame(sample_sums(ps.final.rel.C39))
 relabund.sums.C39 <- relabund.sums.C39 %>% rownames_to_column(var="sampleid")
 relabund.sums.metadata <- join_all(list(relabund.sums.C39, metadata.add), by='sampleid',type='left')
-names(relabund.sums.metadata)[names(relabund.sums.metadata) == 'sample_sums(ps.all.rel.C39)'] <- 'C39'
-relabund.sums.metadata$cluster_philr <- as.factor(relabund.sums.metadata$cluster_philr)
-myvars <- c("C39", "cluster_philr")
+names(relabund.sums.metadata)[names(relabund.sums.metadata) == 'sample_sums(ps.final.rel.C39)'] <- 'C39'
+relabund.sums.metadata$Biotype <- as.factor(relabund.sums.metadata$Biotype)
+myvars <- c("C39.relabund", "Biotype")
 relabund.sums.metadata <- relabund.sums.metadata[myvars]
-C39_cluster <- ggplot(data=relabund.sums.metadata, aes(x=cluster_philr, y=C39)) +
+C39_cluster <- ggplot(data=relabund.sums.metadata, aes(x=Biotype, y=C39.relabund)) +
   geom_boxplot(show.legend=FALSE, fill="dark grey") +
   geom_signif(comparisons=list(c("1","2")), map_signif_level=TRUE)+
   labs(y = "Relative abundance C39")+
@@ -102,21 +102,21 @@ C39_cluster <- ggplot(data=relabund.sums.metadata, aes(x=cluster_philr, y=C39)) 
         panel.background = element_blank(), axis.line = element_line(colour = "black"))+
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B")) + xlab(NULL)
 C39_cluster
-kruskal.test(relabund.sums.metadata$C39, relabund.sums.metadata$cluster_philr)
+kruskal.test(relabund.sums.metadata$C39.relabund, relabund.sums.metadata$Biotype)
 
 ## Fig 3F. Firmicutes relative abundance by biotype
 
-ps.all.rel.Firmicutes = subset_taxa(ps.all.rel, Phylum=="Firmicutes")
-metadata.add <- data.frame(sample_data(ps.all.rel))
+ps.final.rel.Firmicutes = subset_taxa(ps.final.rel, Phylum=="Firmicutes")
+metadata.add <- data.frame(sample_data(ps.final.rel))
 metadata.add <- metadata.add %>% rownames_to_column(var="sampleid")
-relabund.sums.Firmicutes <- as.data.frame(sample_sums(ps.all.rel.Firmicutes))
+relabund.sums.Firmicutes <- as.data.frame(sample_sums(ps.final.rel.Firmicutes))
 relabund.sums.Firmicutes <- relabund.sums.Firmicutes %>% rownames_to_column(var="sampleid")
 relabund.sums.metadata <- join_all(list(relabund.sums.Firmicutes, metadata.add), by='sampleid',type='left')
-names(relabund.sums.metadata)[names(relabund.sums.metadata) == 'sample_sums(ps.all.Firmicutes)'] <- 'Firmicutes'
-relabund.sums.metadata$cluster_philr <- as.factor(relabund.sums.metadata$cluster_philr)
-myvars <- c("Firmicutes", "cluster_philr")
+names(relabund.sums.metadata)[names(relabund.sums.metadata) == 'sample_sums(ps.final.Firmicutes)'] <- 'Firmicutes'
+relabund.sums.metadata$Biotype <- as.factor(relabund.sums.metadata$Biotype)
+myvars <- c("Firmicutes.relabund", "Biotype")
 relabund.sums.metadata <- relabund.sums.metadata[myvars]
-Firmicutes_cluster <- ggplot(data=relabund.sums.metadata, aes(x=cluster_philr, y=Firmicutes)) +
+Firmicutes_cluster <- ggplot(data=relabund.sums.metadata, aes(x=Biotype, y=Firmicutes.relabund)) +
   geom_boxplot(show.legend=FALSE, fill="dark grey") +
   geom_signif(comparisons=list(c("1","2")), map_signif_level=TRUE)+
   labs(y = "Relative abundance Firmicutes")+
@@ -124,4 +124,4 @@ Firmicutes_cluster <- ggplot(data=relabund.sums.metadata, aes(x=cluster_philr, y
         panel.background = element_blank(), axis.line = element_line(colour = "black"))+
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B")) + xlab(NULL)
 Firmicutes_cluster
-kruskal.test(relabund.sums.metadata$Firmicutes, relabund.sums.metadata$cluster_philr)
+kruskal.test(relabund.sums.metadata$Firmicutes.relabund, relabund.sums.metadata$Biotype)
