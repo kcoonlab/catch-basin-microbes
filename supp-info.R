@@ -262,11 +262,11 @@ WQ.data$Rainfall <- as.numeric(WQ.data$Rainfall)
 WQ.data.by.basin <- WQ.data %>%
   group_by(Basin.id) %>%
   dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
-            Pupae.sd = sd(Pupae.abund, na.rm=TRUE),
-            Pupae.min = min(Pupae.abund, na.rm=TRUE),
-            Pupae.max = max(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.sd = sd(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.min = min(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.max = max(Pupae.abund, na.rm=TRUE),
             Pupae.prev = sum(Pupae.pres>=1, na.rm=TRUE)/sum(Pupae.pres>=0, na.rm=TRUE),
-            Methoprene.success = sum(Methoprene.success==1, na.rm=TRUE)/sum(Methoprene.success>=0,na.rm=TRUE), 
+            Methoprene.fail.rate = sum(Methoprene.success==1, na.rm=TRUE)/sum(Methoprene.success>=0,na.rm=TRUE), 
             Rainfall.avg = mean(Rainfall, na.rm=TRUE),
             Rainfall.sd = sd(Rainfall, na.rm=TRUE),
             Rainfall.min = min(Rainfall, na.rm=TRUE),
@@ -297,18 +297,19 @@ WQ.data.by.basin$Basin.type <- c("separate","separate","separate","separate","se
 WQ.data.by.basin$Basin.flowgroup <- c("MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","DonaldBanta","DonaldBanta","DonaldBanta","DonaldBanta","DonaldBanta","DonaldBanta","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","DonaldBanta","MinerEvanstonRammer","MinerEvanstonRammer","Stratford","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Stratford","Stratford","Gibbons","Gibbons","Gibbons","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","Gibbons","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle")
 WQ.data.by.basin$Basin.lon <- c(-87.957901,-87.957907,-87.957481,-87.957248,-87.957257,-87.956212,-87.955063,-87.954987,-87.955064,-87.954972,-87.955073,-87.954946,-87.95384,-87.953765,-87.953832,-87.953746,-87.954378,-87.954381,-87.953833,-87.953712,-87.953743,-87.952483,-87.952659,-87.95254,-87.952665,-87.952544,-87.952664,-87.957397,-87.956346,-87.954944,-87.9622283,-87.96229318,-87.96231902,-87.96222278,-87.9623084,-87.96220848,-87.96220773,-87.96231615,-87.96118708,-87.96128735,-87.96217608,-87.96222302,-87.96231955,-87.96237833,-87.96229127,-87.96109237,-87.96120367,-87.96107445,-87.96582388,-87.96585632,-87.96571188,-87.96835267,-87.96847103,-87.96832385,-87.96844195,-87.96723588,-87.96715035,-87.96706973,-87.96121885,-87.96116213)
 WQ.data.by.basin$Basin.lat <- c(42.085423,42.085404,42.084462,42.084567,42.084494,42.084527,42.083446,42.083488,42.08274,42.08276,42.081956,42.081948,42.082057,42.082044,42.083042,42.083024,42.084479,42.084463,42.084031,42.084027,42.084108,42.08413,42.083495,42.083501,42.081681,42.081668,42.083969,42.082795,42.084539,42.084451,42.08059342,42.08061185,42.07995083,42.07996232,42.0791431,42.07914033,42.07905157,42.0790679,42.07722598,42.07727365,42.07733793,42.07735468,42.07737213,42.07733773,42.07726987,42.07638237,42.07570793,42.07569713,42.0775284,42.07762897,42.07763798,42.07911363,42.07911247,42.08001807,42.08003452,42.07917337,42.07909997,42.079124,42.07906305,42.0793045)
-WQ.data.by.basin <- WQ.data.by.basin[, c(1,32:35,2:31)]
+WQ.data.by.basin$Treatment.status <- c("treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","not_treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated","treated")
+WQ.data.by.basin <- WQ.data.by.basin[, c(1,32:35,2:6,36,7:31)]
 
 ## Table S1B. Measures of water quality, mosquito productivity, and rainfall across all sampled basins on a given sampling date
 
 WQ.data.by.date <- WQ.data %>%
   group_by(Sampling.date) %>%
   dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
-            Pupae.sd = sd(Pupae.abund, na.rm=TRUE),
-            Pupae.min = min(Pupae.abund, na.rm=TRUE),
-            Pupae.max = max(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.sd = sd(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.min = min(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.max = max(Pupae.abund, na.rm=TRUE),
             Pupae.prev = sum(Pupae.pres>=1, na.rm=TRUE)/sum(Pupae.pres>=0, na.rm=TRUE),
-            Methoprene.success = sum(Methoprene.success==1, na.rm=TRUE)/sum(Methoprene.success>=0,na.rm=TRUE), 
+            Methoprene.fail.rate = sum(Methoprene.success==1, na.rm=TRUE)/sum(Methoprene.success>=0,na.rm=TRUE), 
             Rainfall.avg = mean(Rainfall, na.rm=TRUE),
             Rainfall.sd = sd(Rainfall, na.rm=TRUE),
             Rainfall.min = min(Rainfall, na.rm=TRUE),
@@ -340,7 +341,9 @@ WQ.data.by.date <- WQ.data.by.date %>% arrange(factor(Sampling.date, levels = c(
 
 ## Table S2 **See input-files/metadata.txt**
 
-***## Table S3. XXX.
+## Table S3. Results of spatial autocorrelation analyses for testing dependence among basins
+
+## Table S3A. Moran's I autocorrelation index with data aggregated by basin
 
 set.seed(123)
 
@@ -350,11 +353,11 @@ WQ.data$Rainfall <- as.numeric(WQ.data$Rainfall)
 WQ.data.by.basin <- WQ.data %>%
   group_by(Basin.id) %>%
   dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
-            Pupae.sd = sd(Pupae.abund, na.rm=TRUE),
-            Pupae.min = min(Pupae.abund, na.rm=TRUE),
-            Pupae.max = max(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.sd = sd(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.min = min(Pupae.abund, na.rm=TRUE),
+            Pupae.abund.max = max(Pupae.abund, na.rm=TRUE),
             Pupae.prev = sum(Pupae.pres>=1, na.rm=TRUE)/sum(Pupae.pres>=0, na.rm=TRUE),
-            Methoprene.success = sum(Methoprene.success==1, na.rm=TRUE)/sum(Methoprene.success>=0,na.rm=TRUE), 
+            Methoprene.fail.rate = sum(Methoprene.success==1, na.rm=TRUE)/sum(Methoprene.success>=0,na.rm=TRUE), 
             Rainfall.avg = mean(Rainfall, na.rm=TRUE),
             Rainfall.sd = sd(Rainfall, na.rm=TRUE),
             Rainfall.min = min(Rainfall, na.rm=TRUE),
@@ -412,6 +415,8 @@ data.dists.inv[sapply(data.dists.inv, is.infinite)] <- 0
 diag(data.dists.inv) <- 0
 Moran.I(data$shannon_unrar.avg, data.dists.inv, na.rm = TRUE)
 Moran.I(data$richness.avg, data.dists.inv, na.rm = TRUE)
+
+## Table S3B. Mantel test using PhILR distances between samples aggregated by basin
 
 ps.all <- readRDS("input-files/ps.all.rds")
 ps.all.byUCB <- merge_samples(ps.all,"UCB")
