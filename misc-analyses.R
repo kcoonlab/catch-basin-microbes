@@ -32,6 +32,28 @@ model = lme(sqrt(Pupae.abund) ~ season,
               data = WQ.data.pupaepresent)
 anova(model)
 
+## Both the season-wide frequency and abundance of pupae did not significantly differ between basins as a function of basin type or flow group 
+
+WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data.by.basin <- WQ.data %>%
+  group_by(Basin.id) %>%
+  dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
+                   Pupae.prev = sum(Pupae.pres>=1, na.rm=TRUE)/sum(Pupae.pres>=0, na.rm=TRUE))
+WQ.data.by.basin$Basin.type <- c("separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined")
+WQ.data.by.basin$Basin.flowgroup <- c("MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","Donald-Banta","MinerEvanstonRammer","MinerEvanstonRammer","Stratford","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Stratford","Stratford","Gibbons","Gibbons","Gibbons","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","Gibbons","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle")
+
+anova.basintype <- aov(Pupae.prev ~ Basin.type, data=WQ.data.by.basin)
+summary(anova.basintype)
+anova.basintype <- aov(Pupae.abund.avg ~ Basin.type, data=WQ.data.by.basin)
+summary(anova.basintype)
+
+anova.basintype <- aov(Pupae.prev ~ Basin.flowgroup, data=WQ.data.by.basin)
+summary(anova.basintype)
+anova.basintype <- aov(Pupae.abund.avg ~ Basin.flowgroup, data=WQ.data.by.basin)
+summary(anova.basintype)
+
+## Combined and separated basins further had similar changes in productivity through time
+
 ## Season-wide treatment success did not differ between combined and separated basins or among basin flow groups
 
 WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
@@ -125,3 +147,75 @@ taxa_info <- taxa_info %>% rownames_to_column(var = "taxon")
 aldex.results.effectsize.tax <- left_join(aldex.results.effectsize, taxa_info)
 aldex.results.sig.tax.pupaepa <- left_join(aldex.results.sig, taxa_info)
 aldex.results.sig.tax.pupaepa
+
+
+
+##
+
+data <-
+  ps.final.phylum %>%
+  transform_sample_counts(function(x)100* x / sum(x)) %>%
+  psmelt() %>%
+  as_tibble()
+                          
+data %>%
+  group_by(Sample) %>%
+  arrange(-Abundance) %>%
+  slice(1) %>%
+  select(Phylum) %>%
+  ungroup() %>%
+  count(Phylum, name = "n_samples") %>%
+  arrange(-n_samples)
+
+data <-
+  ps.final.genus %>%
+  transform_sample_counts(function(x)100* x / sum(x)) %>%
+  psmelt() %>%
+  as_tibble()
+                          
+data %>%
+  group_by(Sample) %>%
+  arrange(-Abundance) %>%
+  slice(1) %>%
+  select(Genus) %>%
+  ungroup() %>%
+  count(Genus, name = "n_samples") %>%
+  arrange(-n_samples)
+
+
+y1 <- ps.final
+y2 <- transform_sample_counts(y1, function(x) x/sum(x)) #get abundance in %
+y3 <- psmelt(y2) # create dataframe from phyloseq object
+y3$OTU[y3$Abundance < 0.01] <- "Taxa <1% abund."
+y3$OTU[y3$Abundance >= 0.01] <- "Taxa >1% abund."                          
+
+y4 <- y3 %>%
+  group_by(Sample,OTU) %>%
+  dplyr::summarize(Tot.abund = sum(Abundance, na.rm=TRUE))
+
+y5 <- y3[!duplicated(y3$Sample),]
+y6 <- merge(y5, y4, by = "Sample")
+
+y6$Sampling.date <- as.Date(y6$Sampling.date, "%m/%d/%y")
+y6 <- y6 %>% mutate(season = ifelse(Sampling.date < "2021-06-26", "early", "late"))
+                              
+y7 <- filter(y6, OTU.y == "Taxa <1% abund." & season == "early")
+mean(y7$Tot.abund)     
+
+y8 <- filter(y6, OTU.y == "Taxa <1% abund." & Biotype == 1)
+mean(y8$Tot.abund)                                 
+
+relabun.ps <- transform_sample_counts(ps.final.genus,function(x) x / sum(x))
+relabun.ps <- subset_taxa(relabun.ps, Genus %in% c("C39"))
+
+genus.df <- psmelt(relabun.ps)
+genus.df2 <- genus.df
+genus.df2$Sampling.date <- as.Date(genus.df2$Sampling.date, "%m/%d/%y")
+genus.df2 <- genus.df2 %>% mutate(season = ifelse(Sampling.date < "2021-06-26", "early", "late"))
+
+MySummary <- genus.df2 %>%
+  group_by(season) %>%
+  summarize(max_abund = max(Abundance, na.rm=TRUE)) 
+head(MySummary)
+print.data.frame(MySummary)
+                              
