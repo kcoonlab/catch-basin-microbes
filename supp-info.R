@@ -53,6 +53,7 @@ combsep_pupae <- ggplot(WQ.data.by.basin, aes(x=combined_separate, y=Pupae.prev,
   scale_fill_manual(values=c("combined"="grey","separate"="white")) +
   scale_x_discrete(breaks=c("combined","separate"), labels=c("Combined", "Separated"))
 combsep_pupae
+kruskal.test(WQ.data.by.basin$Pupae.prev, WQ.data.by.basin$Basin.type)
 
 ## Fig S2B. Pupal occurence by flow group
 
@@ -69,6 +70,8 @@ flowgroup_pupae <- ggplot(WQ.data.by.basin, aes(x=Flowgroup_coarse, y=Pupae.prev
         axis.text.x=element_text(), legend.key=element_rect(fill="white"),legend.position="blank") +
   ylab("Pupae frequency")+ xlab(NULL)+ labs(fill="Flow group")
 flowgroup_pupae
+anova.flowgroup <- aov(Pupae.prev ~ Basin.flowgroup, data=WQ.data.by.basin)
+summary(anova.flowgroup)
 
 ## Fig S2C. Pupal abundance in "Combined" versus "Separated" basins over time
 
