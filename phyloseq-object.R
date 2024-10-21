@@ -1,4 +1,7 @@
+library(phyloseq)
 library(phytools)
+library(ggplot2)
+library(qiime2R)
 
 pick_new_outgroup <- function(tree.unrooted){
   require(magrittr)
@@ -18,22 +21,16 @@ pick_new_outgroup <- function(tree.unrooted){
 unrooted_qiime_default<-read.newick(file="input-files/tree.nwk")
 new.outgroup = pick_new_outgroup(unrooted_qiime_default)
 rootedTree = ape::root(unrooted_qiime_default, outgroup=new.outgroup, resolve.root=TRUE)
-
-# creating a phyloseq object from the qiime outputs
-
-library(phyloseq)
-library(ggplot2)
-library(qiime2R)
-
 newlyrootedTree<-read_tree(rootedTree, errorIfNULL=FALSE)
 
-ps.all <- qza_to_phyloseq("input-files/table_analysis.qza", 
+ps.temp <- qza_to_phyloseq("input-files/table_analysis.qza", 
                            "input-files/rooted_tree.qza", 
                            "input-files/taxass_taxonomy_98.qza", 
                            "input-files/metadata.txt")
 
-# will create a new phyloseq object using a rerooted tree (see table 2 script)
+# Create a new phyloseq object using a rerooted tree
 # this will be used for all downstream analyses
 
-ps.all <- phyloseq(otu_table(ps.all), tax_table(ps.all), sample_data(ps.all), newlyrootedTree)
-saveRDS(ps.all,"input-files/ps.all.rds")
+ps.temp.rerooted <- phyloseq(otu_table(ps.temp), tax_table(ps.temp), sample_data(ps.temp), newlyrootedTree)
+ps.final <- subset_taxa(ps.temp.rerooted, Family != "Mitochondria")
+saveRDS(ps.final,"input-files/ps.final.rds")
