@@ -8,24 +8,18 @@ library(phyloseq)
 library(ape)
 library(vegan)
 
-
-
-library(bdscale)
-library(scales)
-
-
 ## Fig S1. Pupal ocurrence and abundance over time
 
 WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
-WQ.data$Date <- as.Date(WQ.data$Date, "%m/%d/%y")
-WQ.data <- subset(WQ.data, Date > "2021-04-16")
+WQ.data$Sampling.date <- as.Date(WQ.data$Sampling.date, "%m/%d/%y")
+WQ.data <- subset(WQ.data, Sampling.date > "2021-04-16")
 
 WQ.data.by.date <- WQ.data %>%
-  group_by(Date) %>%
-  dplyr::summarize(Pupae.prev = sum(Pupae>=1, na.rm=TRUE)/sum(Pupae>=0, na.rm=TRUE))
+  group_by(Sampling.date) %>%
+  dplyr::summarize(Pupae.prev = sum(Pupae.pres>=1, na.rm=TRUE)/sum(Pupae.pres>=0, na.rm=TRUE))
 
-ggplot(data=WQ.data, aes(x=Date))+
-  geom_boxplot(aes(y=sqrt(Pupae), group=Date), alpha=0.3) +
+ggplot(data=WQ.data, aes(x=Sampling.date)) +
+  geom_boxplot(aes(y=sqrt(Pupae.abund), group=Sampling.date), alpha=0.3) +
   geom_line(data=WQ.data.by.date, aes(y=Pupae.prev*10), color="red") +
   scale_y_continuous(name="Pupae abundance per basin (sqrt)", sec.axis=sec_axis(~.*10, name="Percent basins with pupae present"))+
   theme(axis.title = element_text(size=11), axis.title.y.right = element_text(colour = "black"), 
@@ -97,13 +91,11 @@ pupae_flowgroup_time
 ## Fig S3. Classification tree for biotype cluster assignment of samples
 
 metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
-cols.convert.factor <-c("date","date_code","cluster_clr_asv","cluster_philr","cluster_philr_genus",
-                        "cluster_philr_family", "cluster_philr_phylum","philr_genus_split",
-                        "philr_phylum_split","philr_phylum_split15","Pupae_pa","Moz_pa", "combined_separate")
+cols.convert.factor <-c("Sampling.date","Biotype","Basin.type")
 metadata[,cols.convert.factor] <- lapply(metadata[,cols.convert.factor], factor)
 metadata.samples <- subset(metadata, sample_control=="sample")
 
-testtree <- tree(data=metadata.samples, cluster_philr ~ date + combined_separate + pH + Temp + Cond + DO + Sal)
+testtree <- tree(data=metadata.samples, Biotype ~ Sampling.date + Basin.type + pH + Temp.C + Cond + DO + Sal)
 plot(testtree)
 text(testtree)
 
@@ -111,13 +103,13 @@ text(testtree)
 
 ## Fig S4A. Alpha diversity in "Combined" versus "Separated" basins over time
 
-metadata.samples$date <- factor(metadata.samples$date, levels = c("4/15/21","6/11/21","6/25/21","7/9/21","7/23/21","8/6/21","8/27/21","9/17/21"))
+metadata.samples$Sampling.date <- factor(metadata.samples$Sampling.date, levels = c("4/15/21","6/11/21","6/25/21","7/9/21","7/23/21","8/6/21","8/27/21","9/17/21"))
 
 shannon.date <- ggplot(data=metadata.samples, 
-                        aes(x=date, y=shannon_unrar, fill=combined_separate)) +
+                        aes(x=Sampling.date, y=Shannon, fill=Basin.type)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("combined"="grey","separate"="white"),
-                    breaks=c("combined","separate"), labels=c("Combined", "Separated")) +
+  scale_fill_manual(values=c("combined"="grey","separated"="white"),
+                    breaks=c("combined","separated"), labels=c("Combined", "Separated")) +
   scale_x_discrete(breaks=c("4/15/21","6/11/21","6/25/21","7/9/21","7/23/21","8/6/21","8/27/21","9/17/21"),
                    labels=c("4/15","6/11","6/25","7/9","7/23","8/6","8/27","9/17")) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -128,11 +120,11 @@ shannon.date
 
 ## Fig S4B. Alpha diversity in basins assigned to different flow groups over time
 
-metadata.samples$Flowgroup_coarse <- factor(metadata_div$Flowgroup_coarse, levels=c("Donald-Banta", "Gibbons", "MayfairCarlyle", "MinerEvanstonRammer""Stratford"))
+metadata.samples$Basin.flowgroup <- factor(metadata.samples$Basin.flowgroup, levels=c("DonaldBanta", "Gibbons", "MayfairCarlyle", "MinerEvanstonRammer""Stratford"))
 shannon.date <- ggplot(data=metadata.samples, 
-                        aes(x=date, y=shannon_unrar, fill=Flowgroup_coarse)) +
+                        aes(x=Sampling.date, y=Shannon, fill=Basin.flowgroup)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("Donald-Banta"="black", "Gibbons"="dark grey","MayfairCarlyle"="grey", "MinerEvanstonRammer"="light grey", "Stratford"="white")) +
+  scale_fill_manual(values=c("DonaldBanta"="black", "Gibbons"="dark grey","MayfairCarlyle"="grey", "MinerEvanstonRammer"="light grey", "Stratford"="white")) +
   scale_x_discrete(breaks=c("4/15/21","6/11/21","6/25/21","7/9/21","7/23/21","8/6/21","8/27/21","9/17/21"),
                    labels=c("4/15","6/11","6/25","7/9","7/23","8/6","8/27","9/17")) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -349,6 +341,8 @@ WQ.data.by.date <- WQ.data.by.date %>% arrange(factor(Sampling.date, levels = c(
 ## Table S2 **See input-files/metadata.txt**
 
 ***## Table S3. XXX.
+
+set.seed(123)
 
 WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data["Rainfall"][WQ.data["Rainfall"]=="trace"] <- 0.001
