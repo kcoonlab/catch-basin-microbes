@@ -9,6 +9,7 @@ library(dplyr)
 library(tibble)
 library(plyr)
 library(reshape2)
+library(nlme)
 
 ## Fig 5A. ASVs by pupae presence/absence
 
