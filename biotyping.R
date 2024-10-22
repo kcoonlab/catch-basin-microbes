@@ -1,3 +1,5 @@
+set.seed(123)
+
 library(phyloseq)
 library(qiime2R)
 library(microbiome)
