@@ -23,7 +23,6 @@ features.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"),
                     scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present")) +
                     xlab("Pupae presence")+ ylab("ASV richness")
 features.pupaepa
-#kruskal.test(ASV.richness ~ Pupae.pres, data = metadata)
 
 metadata$Datefactor <- metadata$Sampling.date %>% as.factor
 metadata <- subset(metadata, !is.na(Pupae.pres)==TRUE)
@@ -46,7 +45,6 @@ shannon.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"),
                           scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                           xlab("Pupae presence")+ ylab("Shannon index")
 shannon.pupaepa
-#kruskal.test(Shannon ~ Pupae.pres, data = metadata)
 
 metadata$Datefactor <- metadata$Sampling.date %>% as.factor
 metadata <- subset(metadata, !is.na(Pupae.pres)==TRUE)
@@ -69,7 +67,6 @@ Proteobacteria.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"),
                           scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                           xlab("Pupae presence")+ ylab("Relative abundance Proteobacteria")
 Proteobacteria.pupaepa
-#kruskal.test(Proteobacteria.relabund ~ Pupae.pres, data = metadata)
 
 metadata$Datefactor <- metadata$Sampling.date %>% as.factor
 metadata <- subset(metadata, !is.na(Pupae.pres)==TRUE)
@@ -92,7 +89,6 @@ C39.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"),
                       scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                       xlab("Pupae presence")+ ylab("Relative abundance C39")
 C39.pupaepa
-#kruskal.test(C39.relabund ~ Pupae.pres, data = metadata)
 
 metadata$Datefactor <- metadata$Sampling.date %>% as.factor
 metadata <- subset(metadata, !is.na(Pupae.pres)==TRUE)
