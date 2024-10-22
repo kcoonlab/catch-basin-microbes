@@ -34,3 +34,11 @@ ps.temp <- qza_to_phyloseq("input-files/table_analysis.qza",
 ps.temp.rerooted <- phyloseq(otu_table(ps.temp), tax_table(ps.temp), sample_data(ps.temp), newlyrootedTree)
 ps.final <- subset_taxa(ps.temp.rerooted, Family != "Mitochondria")
 saveRDS(ps.final,"input-files/ps.final.rds")
+
+shannon <- diversity(t(otu_table(ps.final)), "shannon")
+asvfac = factor(rownames(tax_table(ps.final)))
+asvtab = apply(otu_table(ps.final), MARGIN = 2, function(x) {
+    tapply(x, INDEX = asvfac, FUN = sum, na.rm = TRUE, simplify = TRUE)
+})
+observationThreshold = 1
+richness <- apply(asvtab > observationThreshold, 2, sum)
