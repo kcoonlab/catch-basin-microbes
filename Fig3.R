@@ -65,8 +65,19 @@ cluster_features <- ggplot(data=na.omit(metadata[,c("Biotype","ASV.richness")]),
   ylab("ASV richness")+ xlab(NULL)+
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B"))
 cluster_features
-kruskal.test(metadata$ASV.richness, metadata$Biotype)                              
+#kruskal.test(metadata$ASV.richness, metadata$Biotype)                              
 
+metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+metadata <- subset(metadata, !is.na(Biotype)==TRUE)
+metadata = metadata %>%
+     arrange(Basin.id, Datefactor)                                       
+model = lme(ASV.richness ~ Biotype,
+              random = ~1|Basin.id, 
+              correlation = corAR1(), 
+              data = metadata)
+anova(model)
+
+                              
 ## Fig 3D. Shannon index by biotype
 
 cluster_shannon <-ggplot(data=na.omit(metadata[,c("Biotype","Shannon")]), aes(x=Biotype, y=Shannon)) + 
@@ -79,7 +90,17 @@ cluster_shannon <-ggplot(data=na.omit(metadata[,c("Biotype","Shannon")]), aes(x=
   ylab("Shannon index")+ xlab(NULL)+
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B"))
 cluster_shannon
-kruskal.test(metadata$Shannon, metadata$Biotype)
+#kruskal.test(metadata$Shannon, metadata$Biotype)
+
+metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+metadata <- subset(metadata, !is.na(Biotype)==TRUE)
+metadata = metadata %>%
+     arrange(Basin.id, Datefactor)                                       
+model = lme(Shannon ~ Biotype,
+              random = ~1|Basin.id, 
+              correlation = corAR1(), 
+              data = metadata)
+anova(model)                              
 
 ## Fig 3E. C39 relative abundance by biotype
 
@@ -102,8 +123,18 @@ C39_cluster <- ggplot(data=relabund.sums.metadata, aes(x=Biotype, y=C39.relabund
         panel.background = element_blank(), axis.line = element_line(colour = "black"))+
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B")) + xlab(NULL)
 C39_cluster
-kruskal.test(relabund.sums.metadata$C39.relabund, relabund.sums.metadata$Biotype)
+#kruskal.test(relabund.sums.metadata$C39.relabund, relabund.sums.metadata$Biotype)
 
+metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+metadata <- subset(metadata, !is.na(Biotype)==TRUE)
+metadata = metadata %>%
+     arrange(Basin.id, Datefactor)                                       
+model = lme(C39.relabund ~ Biotype,
+              random = ~1|Basin.id, 
+              correlation = corAR1(), 
+              data = metadata)
+anova(model) 
+                                        
 ## Fig 3F. Firmicutes relative abundance by biotype
 
 ps.final.rel.Firmicutes = subset_taxa(ps.final.rel, Phylum=="Firmicutes")
@@ -124,4 +155,15 @@ Firmicutes_cluster <- ggplot(data=relabund.sums.metadata, aes(x=Biotype, y=Firmi
         panel.background = element_blank(), axis.line = element_line(colour = "black"))+
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B")) + xlab(NULL)
 Firmicutes_cluster
-kruskal.test(relabund.sums.metadata$Firmicutes.relabund, relabund.sums.metadata$Biotype)
+#kruskal.test(relabund.sums.metadata$Firmicutes.relabund, relabund.sums.metadata$Biotype)
+
+metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+metadata <- subset(metadata, !is.na(Biotype)==TRUE)
+metadata = metadata %>%
+     arrange(Basin.id, Datefactor)                                       
+model = lme(Firmicutes.relabund ~ Biotype,
+              random = ~1|Basin.id, 
+              correlation = corAR1(), 
+              data = metadata)
+anova(model) 
+                                        
