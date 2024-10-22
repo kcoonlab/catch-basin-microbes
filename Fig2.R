@@ -1,5 +1,7 @@
 ## Fig 2. Bacterial diversity in water sampled from study catch basins
 
+set.seed(123)
+
 library(phyloseq)
 library(RColorBrewer)
 library(ggplot2)
