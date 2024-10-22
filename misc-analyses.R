@@ -3,6 +3,7 @@ set.seed(123)
 library(dplyr)
 library(nlme)
 library(rstatix)
+library(lme4)
 
 ## Basins with high average pupal abundance vs. those with highes frequency of pupae over time
 
@@ -17,7 +18,7 @@ WQ.data.by.basin$Basin.flowgroup <- c("MinerEvanstonRammer","MinerEvanstonRammer
 
 cor.test(WQ.data.by.basin$Pupae.abund.avg, WQ.data.by.basin$Pupae.prev, method=c("pearson"))
 
-## Pupal abundances were also higher on average at the end of the season 
+## Pupal abundances were also generally higher later in the season 
 
 WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data$Sampling.date <- as.Date(WQ.data$Sampling.date, "%m/%d/%y")
@@ -52,8 +53,6 @@ summary(anova.basintype)
 anova.basintype <- aov(Pupae.abund.avg ~ Basin.flowgroup, data=WQ.data.by.basin)
 summary(anova.basintype)
 
-## Combined and separated basins further had similar changes in productivity through time
-
 ## Season-wide treatment success did not differ between combined and separated basins or among basin flow groups
 
 WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
@@ -75,15 +74,21 @@ summary(anova.flowgroup)
 
 metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
-metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+#metadata$Datefactor <- metadata$Sampling.date %>% as.factor
 metadata <- subset(metadata, !is.na(Biotype)==TRUE)
-metadata = metadata %>%
-     arrange(Basin.id, Datefactor)                                       
-model = lme(Biotype ~ Basin.type,
-              random = ~1|Basin.id, 
-              correlation = corAR1(), 
-              data = metadata)
-anova(model)
+#metadata = metadata %>%
+#     arrange(Basin.id, Datefactor)
+
+#model = lme(Biotype ~ Basin.type,
+#              random = ~1|Basin.id, 
+#              correlation = corAR1(), 
+#              data = metadata)
+#anova(model)
+
+metadata <- metadata %>% mutate(Biotype.new = ifelse(Biotype == 1, 0, 1))
+model = glmer(Biotype.new ~ Basin.type + (1 | Basin.id), data  = metadata, family = binomial)
+model = glm(Biotype.new ~ Basin.type, data  = metadata, family = binomial)
+summary(model)
 
 ## Alpha diversity in basins (as measured by Shannon’s H index) differed among sampling dates 
 
@@ -148,9 +153,10 @@ aldex.results.effectsize.tax <- left_join(aldex.results.effectsize, taxa_info)
 aldex.results.sig.tax.pupaepa <- left_join(aldex.results.sig, taxa_info)
 aldex.results.sig.tax.pupaepa
 
-
-
 ##
+
+ps.final <- readRDS("input-files/ps.final.rds")
+ps.final.phylum <- tax_glom(ps.final, "Phylum", NArm = TRUE)
 
 data <-
   ps.final.phylum %>%
