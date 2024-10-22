@@ -1,5 +1,7 @@
 ## Supplementary information for: Microbiota composition associates with mosquito productivity outcomes in belowground larval habitats
 
+set.seed(123)
+
 library(ggplot2)
 library(dplyr)
 library(tree)
@@ -7,6 +9,7 @@ library(nlme)
 library(phyloseq)
 library(ape)
 library(vegan)
+library(philr)
 
 ## Fig S1. Pupal ocurrence and abundance over time
 
@@ -32,17 +35,17 @@ ggplot(data=WQ.data, aes(x=Sampling.date)) +
 ## Fig S2A. Pupal occurence by basin type
 
 WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
-WQ.data$Date <- as.Date(WQ.data$Date, "%m/%d/%y")
+WQ.data$Sampling.date <- as.Date(WQ.data$Sampling.date, "%m/%d/%y")
 
 WQ.data.by.basin <- WQ.data %>%
-  group_by(UCB) %>%
-  dplyr::summarize(Pupae.avg = mean(Pupae, na.rm=TRUE),
-            Pupae.prev = sum(Pupae>=1, na.rm=TRUE)/sum(Pupae>=0, na.rm=TRUE)
+  group_by(Basin.id) %>%
+  dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
+            Pupae.prev = sum(Pupae.pres>=1, na.rm=TRUE)/sum(Pupae.pres>=0, na.rm=TRUE)
             )
-WQ.data.by.basin$combined_separate <- c("separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined")
-WQ.data.by.basin$Flowgroup_coarse <- c("MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","Donald-Banta","MinerEvanstonRammer","MinerEvanstonRammer","Stratford","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Stratford","Stratford","Gibbons","Gibbons","Gibbons","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","Gibbons","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle")
+WQ.data.by.basin$Basin.type <- c("separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined")
+WQ.data.by.basin$Basin.flowgroup <- c("MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","Donald-Banta","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","Donald-Banta","MinerEvanstonRammer","MinerEvanstonRammer","Stratford","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Stratford","Stratford","Gibbons","Gibbons","Gibbons","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","Gibbons","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle")
 
-combsep_pupae <- ggplot(WQ.data.by.basin, aes(x=combined_separate, y=Pupae.prev, fill=combined_separate)) +
+combsep_pupae <- ggplot(WQ.data.by.basin, aes(x=Basin.type, y=Pupae.prev, fill=Basin.type)) +
   geom_boxplot() + 
   xlab(NULL) +
   theme(axis.title = element_text(), 
@@ -53,13 +56,15 @@ combsep_pupae <- ggplot(WQ.data.by.basin, aes(x=combined_separate, y=Pupae.prev,
   scale_fill_manual(values=c("combined"="grey","separate"="white")) +
   scale_x_discrete(breaks=c("combined","separate"), labels=c("Combined", "Separated"))
 combsep_pupae
-kruskal.test(WQ.data.by.basin$Pupae.prev, WQ.data.by.basin$Basin.type)
+
+anova.basintype <- aov(Pupae.prev ~ Basin.type, data=WQ.data.by.basin)
+summary(anova.basintype)
 
 ## Fig S2B. Pupal occurence by flow group
 
-WQ.data.by.basin$Flowgroup_coarse <- factor(metadata_div$Flowgroup_coarse, levels=c("Donald-Banta", "Gibbons", "MayfairCarlyle", "MinerEvanstonRammer""Stratford"))
+WQ.data.by.basin$Basin.flowgroup <- factor(WQ.data.by.basin$Basin.flowgroup, levels=c("Donald-Banta", "Gibbons", "MayfairCarlyle", "MinerEvanstonRammer","Stratford"))
 
-flowgroup_pupae <- ggplot(WQ.data.by.basin, aes(x=Flowgroup_coarse, y=Pupae.prev, fill=Flowgroup_coarse)) +
+flowgroup_pupae <- ggplot(WQ.data.by.basin, aes(x=Basin.flowgroup, y=Pupae.prev, fill=Basin.flowgroup)) +
   geom_boxplot() +
   scale_fill_manual(values=c("Donald-Banta"="black", "Gibbons"="dark grey","MayfairCarlyle"="grey", "MinerEvanstonRammer"="light grey", "Stratford"="white")) +
   scale_x_discrete(breaks=c("Gibbons","MayfairCarlyle","Stratford","Donald-Banta","MinerEvanstonRammer"), 
@@ -70,14 +75,15 @@ flowgroup_pupae <- ggplot(WQ.data.by.basin, aes(x=Flowgroup_coarse, y=Pupae.prev
         axis.text.x=element_text(), legend.key=element_rect(fill="white"),legend.position="blank") +
   ylab("Pupae frequency")+ xlab(NULL)+ labs(fill="Flow group")
 flowgroup_pupae
+
 anova.flowgroup <- aov(Pupae.prev ~ Basin.flowgroup, data=WQ.data.by.basin)
 summary(anova.flowgroup)
 
 ## Fig S2C. Pupal abundance in "Combined" versus "Separated" basins over time
 
-WQ.data$Datefactor <- WQ.data$Date %>% as.factor
+WQ.data$Datefactor <- WQ.data$Sampling.date %>% as.factor
 
-pupae_flowgroup_time <- ggplot(WQ.data, aes(y=sqrt(Pupae), x=Datefactor, fill=combined_separate)) +
+pupae_flowgroup_time <- ggplot(WQ.data, aes(y=sqrt(Pupae.abund), x=Datefactor, fill=Basin.type)) +
   geom_boxplot() +
   theme(axis.title = element_text(), 
         panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -138,8 +144,6 @@ shannon.date
 
 ## Fig S5. Principal coordinates analysis of PhILR Euclidean distances
 
-set.seed(123)
-
 ps.final <- readRDS("input-files/ps.final.rds")
 sample_data(ps.final)$sample.id <- sample_names(ps.final)
 
@@ -164,7 +168,7 @@ dist.most.philr <- dist(ps.most.philr, method="euclidean")
 
 ord.most.philr <- ordinate(ps.most, method="PCoA", distance = dist.most.philr)
 
-plot.ord.philr <- plot_ordination(ps.most, ord.most.philr, type = "samples", color = "date", shape = "combined_separate") + 
+plot.ord.philr <- plot_ordination(ps.most, ord.most.philr, type = "samples", color = "Sampling.date", shape = "Basin.type") + 
   geom_point(size=3) +
   scale_color_discrete(breaks=c(), labels=c()) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -172,7 +176,7 @@ plot.ord.philr <- plot_ordination(ps.most, ord.most.philr, type = "samples", col
         legend.key = element_rect(fill="white"))
 plot.ord.philr
 
-plot.ord.philr <- plot_ordination(ps.most, ord.most.philr, type = "samples", color = "cluster_philr") + 
+plot.ord.philr <- plot_ordination(ps.most, ord.most.philr, type = "samples", color = "Biotype") + 
   geom_point(size=3) +
   scale_x_discrete(breaks=c("1","2"), labels=c("A", "B")) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
