@@ -10,12 +10,12 @@ library(reshape2)
 
 ## Fig 5A. ASVs by pupae presence/absence
 
-ps.all <- readRDS("input-files/ps.all.rds")
-metadata <- data.frame(sample_data(ps.all))
+ps.final <- readRDS("input-files/ps.final.rds")
+metadata <- data.frame(sample_data(ps.final))
 metadata <- subset(metadata, sample_control=="sample")
-metadata$Pupae_pa <- as.factor(metadata$Pupae_pa)
-features.pupaepa <- ggplot(data=subset(metadata,Pupae_pa != "NA"), 
-                    aes(x=Pupae_pa, y=features_unrar)) +
+metadata$Pupae.pres <- as.factor(metadata$Pupae.pres)
+features.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"), 
+                    aes(x=Pupae.pres, y=ASV.richness)) +
                     geom_boxplot(fill="dark grey") +
                     geom_signif(comparisons=list(c("0","1")), map_signif_level=TRUE) +
                     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -23,12 +23,12 @@ features.pupaepa <- ggplot(data=subset(metadata,Pupae_pa != "NA"),
                     scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present")) +
                     xlab("Pupae presence")+ ylab("ASV richness")
 features.pupaepa
-kruskal.test(features_unrar ~ Pupae_pa, data = metadata)
+kruskal.test(ASV.richness ~ Pupae.pres, data = metadata)
 
 ## Fig 5B. Shannon index by pupae presence/absence
 
-shannon.pupaepa <- ggplot(data=subset(metadata,Pupae_pa != "NA"), 
-                          aes(x=Pupae_pa, y=shannon_unrar)) +
+shannon.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"), 
+                          aes(x=Pupae.pres, y=Shannon)) +
                           geom_boxplot(fill="dark grey") +
                           geom_signif(comparisons=list(c("0","1")), map_signif_level=TRUE) +
                           theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -36,12 +36,12 @@ shannon.pupaepa <- ggplot(data=subset(metadata,Pupae_pa != "NA"),
                           scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                           xlab("Pupae presence")+ ylab("Shannon index")
 shannon.pupaepa
-kruskal.test(shannon_unrar ~ Pupae_pa, data = metadata)
+kruskal.test(Shannon ~ Pupae.pres, data = metadata)
 
 ## Fig 5C. Proteobacteria relative abundance by pupae presence/absence
 
-Proteobacteria.pupaepa <- ggplot(data=subset(metadata,Pupae_pa != "NA"), 
-                          aes(x=Pupae_pa, y=Proteobacteria)) +
+Proteobacteria.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"), 
+                          aes(x=Pupae.pres, y=Proteobacteria.relabund)) +
                           geom_boxplot(fill="dark grey") +
                           geom_signif(comparisons=list(c("0","1")), map_signif_level=TRUE) +
                           theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -49,12 +49,12 @@ Proteobacteria.pupaepa <- ggplot(data=subset(metadata,Pupae_pa != "NA"),
                           scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                           xlab("Pupae presence")+ ylab("Relative abundance Proteobacteria")
 Proteobacteria.pupaepa
-kruskal.test(Proteobacteria ~ Pupae_pa, data = metadata)
+kruskal.test(Proteobacteria.relabund ~ Pupae.pres, data = metadata)
 
 ## Fig 5D. C39 relative abundance by pupae presence/absence
 
-C39.pupaepa <- ggplot(data=subset(metadata,Pupae_pa != "NA"), 
-                      aes(x=Pupae_pa, y=C39)) +
+C39.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"), 
+                      aes(x=Pupae.pres, y=C39.relabund)) +
                       geom_boxplot(fill="dark grey") +
                       geom_signif(comparisons=list(c("0","1")), map_signif_level=TRUE) +
                       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -62,17 +62,17 @@ C39.pupaepa <- ggplot(data=subset(metadata,Pupae_pa != "NA"),
                       scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                       xlab("Pupae presence")+ ylab("Relative abundance C39")
 C39.pupaepa
-kruskal.test(C39 ~ Pupae_pa, data = metadata)
+kruskal.test(C39.relabund ~ Pupae.pres, data = metadata)
 
 ## Fig 5E. Pupae per dip by relative abundance of C39
 
-ggplot(metadata, aes(x=C39, y=sqrt(Pupae))) +
+ggplot(metadata, aes(x=C39.relabund, y=sqrt(Pupae.abund))) +
   geom_point(color = "black", fill = "black")
   
 ## Fig 5F. Relative abundance of C39 strains over time
 
-ps.all.rel <- transform_sample_counts(ps.all, function(x) x / sum(x) )
-table.C39 <- subset_taxa(ps.all.rel, Genus == "C39") 
+ps.final.rel <- transform_sample_counts(ps.final, function(x) x / sum(x) )
+table.C39 <- subset_taxa(ps.final.rel, Genus == "C39") 
 tax_table(table.C39) # 11 ASVs
 #1c896ad60b318aea6eb67595fe68d2bf
 #56f81ede4d385001b8135ac61458befe
@@ -86,7 +86,7 @@ tax_table(table.C39) # 11 ASVs
 #a5f2920be80527d6ec323de39babdf2e
 #5ecd2e447fe9cfbef560d1c5e0738bb1
 
-df.asvtable <- as.data.frame(otu_table(ps.all.rel))
+df.asvtable <- as.data.frame(otu_table(ps.final.rel))
 df.asvtable$asvid <- rownames(df.asvtable)
 df.C39.asvs <- subset(df.asvtable, df.asvtable$asvid %in% c("1c896ad60b318aea6eb67595fe68d2bf","56f81ede4d385001b8135ac61458befe",
                                                             "713852f86aa38fb1f6f5291dee0db276","3813a6b872a29e05f211916bfb3397ef",
@@ -96,9 +96,9 @@ df.C39.asvs <- subset(df.asvtable, df.asvtable$asvid %in% c("1c896ad60b318aea6eb
                                                             "5ecd2e447fe9cfbef560d1c5e0738bb1"))
 relabund.C39.asvs <-as.data.frame(t(df.C39.asvs))
 relabund.C39.asvs <- relabund.C39.asvs %>% rownames_to_column(var="sampleid")
-metadata.add <- data.frame(sample_data(ps.all.rel))
+metadata.add <- data.frame(sample_data(ps.final.rel))
 metadata.add <- metadata.add %>% rownames_to_column(var="sampleid")
-metadata.relabund <- join_all(list(relabund.C39.asvs, metadata.add), by='sampleid',type='left')
+metadata.relabund <- join_final(list(relabund.C39.asvs, metadata.add), by='sampleid',type='left')
 metadata.relabund <- subset(metadata.relabund, metadata.relabund$sampleid != "asvid")
 
 metadata.relabund.long <- reshape2::melt(data=metadata.relabund,
