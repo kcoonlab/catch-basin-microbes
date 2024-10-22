@@ -1,7 +1,10 @@
+set.seed(123)
+
 library(phyloseq)
 library(phytools)
 library(ggplot2)
 library(qiime2R)
+library(vegan)
 
 pick_new_outgroup <- function(tree.unrooted){
   require(magrittr)
