@@ -23,7 +23,17 @@ features.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"),
                     scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present")) +
                     xlab("Pupae presence")+ ylab("ASV richness")
 features.pupaepa
-kruskal.test(ASV.richness ~ Pupae.pres, data = metadata)
+#kruskal.test(ASV.richness ~ Pupae.pres, data = metadata)
+
+metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+metadata <- subset(metadata, !is.na(Pupae.pres)==TRUE)
+metadata = metadata %>%
+     arrange(Basin.id, Datefactor)                                       
+model = lme(ASV.richness ~ Pupae.pres,
+              random = ~1|Basin.id, 
+              correlation = corAR1(), 
+              data = metadata)
+anova(model) 
 
 ## Fig 5B. Shannon index by pupae presence/absence
 
@@ -36,7 +46,17 @@ shannon.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"),
                           scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                           xlab("Pupae presence")+ ylab("Shannon index")
 shannon.pupaepa
-kruskal.test(Shannon ~ Pupae.pres, data = metadata)
+#kruskal.test(Shannon ~ Pupae.pres, data = metadata)
+
+metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+metadata <- subset(metadata, !is.na(Pupae.pres)==TRUE)
+metadata = metadata %>%
+     arrange(Basin.id, Datefactor)                                       
+model = lme(Shannon ~ Pupae.pres,
+              random = ~1|Basin.id, 
+              correlation = corAR1(), 
+              data = metadata)
+anova(model) 
 
 ## Fig 5C. Proteobacteria relative abundance by pupae presence/absence
 
@@ -49,7 +69,17 @@ Proteobacteria.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"),
                           scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                           xlab("Pupae presence")+ ylab("Relative abundance Proteobacteria")
 Proteobacteria.pupaepa
-kruskal.test(Proteobacteria.relabund ~ Pupae.pres, data = metadata)
+#kruskal.test(Proteobacteria.relabund ~ Pupae.pres, data = metadata)
+
+metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+metadata <- subset(metadata, !is.na(Pupae.pres)==TRUE)
+metadata = metadata %>%
+     arrange(Basin.id, Datefactor)                                       
+model = lme(Proteobacteria.relabund ~ Pupae.pres,
+              random = ~1|Basin.id, 
+              correlation = corAR1(), 
+              data = metadata)
+anova(model) 
 
 ## Fig 5D. C39 relative abundance by pupae presence/absence
 
@@ -62,7 +92,17 @@ C39.pupaepa <- ggplot(data=subset(metadata,Pupae.pres != "NA"),
                       scale_x_discrete(breaks=c("0","1"), labels=c("Absent", "Present"))+
                       xlab("Pupae presence")+ ylab("Relative abundance C39")
 C39.pupaepa
-kruskal.test(C39.relabund ~ Pupae.pres, data = metadata)
+#kruskal.test(C39.relabund ~ Pupae.pres, data = metadata)
+
+metadata$Datefactor <- metadata$Sampling.date %>% as.factor
+metadata <- subset(metadata, !is.na(Pupae.pres)==TRUE)
+metadata = metadata %>%
+     arrange(Basin.id, Datefactor)                                       
+model = lme(C39.relabund ~ Pupae.pres,
+              random = ~1|Basin.id, 
+              correlation = corAR1(), 
+              data = metadata)
+anova(model) 
 
 ## Fig 5E. Pupae per dip by relative abundance of C39
 
