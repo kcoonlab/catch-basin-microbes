@@ -1,5 +1,7 @@
 ## Fig 5. Bacterial community differences by pupal occurrence
 
+set.seed(123)
+
 library(phyloseq)
 library(ggplot2)
 library(ggsignif)
@@ -134,11 +136,11 @@ relabund.C39.asvs <-as.data.frame(t(df.C39.asvs))
 relabund.C39.asvs <- relabund.C39.asvs %>% rownames_to_column(var="sampleid")
 metadata.add <- data.frame(sample_data(ps.final.rel))
 metadata.add <- metadata.add %>% rownames_to_column(var="sampleid")
-metadata.relabund <- join_final(list(relabund.C39.asvs, metadata.add), by='sampleid',type='left')
+metadata.relabund <- join(relabund.C39.asvs, metadata.add, by='sampleid',type='left')
 metadata.relabund <- subset(metadata.relabund, metadata.relabund$sampleid != "asvid")
 
 metadata.relabund.long <- reshape2::melt(data=metadata.relabund,
-                                 id.vars=c("UCB","date"),
+                                 id.vars=c("Basin.id","Sampling.date"),
                                  measure.vars=c("37087046f6f5e933bf0dd42420f81cfe","34e720bc46aa554b53222a0915c6410e",
                                                 "5ecd2e447fe9cfbef560d1c5e0738bb1","a5f2920be80527d6ec323de39babdf2e",
                                                 "3813a6b872a29e05f211916bfb3397ef","00a1a1e7419bd374f7b8993902555db6",
@@ -148,7 +150,7 @@ metadata.relabund.long <- reshape2::melt(data=metadata.relabund,
                                  variable.name="asvid",
                                  value.name="relabund") 
 
-metadata.relabund.long$date <- factor(metadata.relabund.long$date, levels = c("4/15/21","6/11/21","6/25/21","7/9/21","7/23/21","8/6/21","8/27/21","9/17/21"))
+metadata.relabund.long$date <- factor(metadata.relabund.long$Sampling.date, levels = c("4/15/21","6/11/21","6/25/21","7/9/21","7/23/21","8/6/21","8/27/21","9/17/21"))
 metadata.relabund.long$relabund <- as.numeric(metadata.relabund.long$relabund)                               
 
 c39_date <- ggplot(metadata.relabund.long, aes(x=date, y=relabund, color=factor(asvid))) +
