@@ -1,3 +1,5 @@
+set.seed(123)
+
 ## Table 2.  Effects of sampling date, water quality, mosquito productivity on microbiota diversity
 
 library(phyloseq)
@@ -9,7 +11,6 @@ library(tidyr)
 
 ## Table 2A  PERMANOVA tests using PhILR distances between samples
 
-set.seed(123)
 ps.final <- readRDS("input-files/ps.final.rds")
 sample_data(ps.final)$sample.id <- sample_names(ps.final)
 
