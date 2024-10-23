@@ -1,3 +1,5 @@
+set.seed(123)
+
 ## Table 3. Effects of microbiota on mosquito productivity
 
 library(dplyr)
