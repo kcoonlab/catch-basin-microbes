@@ -10,7 +10,7 @@ Microbiota composition associates with mosquito productivity outcomes in belowgr
 Scripts for each analysis are written in R. Each directory contains necessary files and code to recreate each figure, table, and associated statistical analyses reported in the manuscript. To repeat the analysis, clone the repository, and then run each script. Do not `cd` into the cloned repository. 
 
 **Example**
-Create a new project in RStudio. To run the script to recreate Figure 1 in the manuscript: 
+Create a new project in RStudio. To run the script to recreate Fig. 1 in the manuscript: 
 * Navigate to the terminal window and `git clone https://github.com/kcoonlab/catch-basin-microbes`.
 * Open the script `Fig1.R` from the files panel window.
 * Install required packages. 
@@ -19,17 +19,17 @@ Create a new project in RStudio. To run the script to recreate Figure 1 in the m
 ## Recreate the Manuscript Figures, Tables, and Associated Statistical Analyses
 Once the repository has been cloned (above), recreate each figure/table/data analysis as follows: 
 
-**Fig 1: Locations of collection sites**
+**Fig. 1: Locations of collection sites**
 * Fig 1A - Script: `Fig1.R`: run code from line `1` to `15`
 * Fig 1B - Script: `Fig1.R`: run code from line `1` to `27`
 
-**Fig 2: Bacterial diversity in water sampled from study catch basins**
+**Fig. 2: Bacterial diversity in water sampled from study catch basins**
 * Fig 2A - Script: `Fig2.R`: run code from line `1` to `29`
 * Fig 2B - Script: `Fig2.R`: run code from line `1 to `50`
 * Fig 2C - Script: `Fig2.R`: run code from line `1` to `69`
 * Fig 2D - Script: `Fig2.R`: run code from line `1` to `88`
 
-**Fig 3: Catch basin microbiota biotypes identified by PAM clustering**
+**Fig. 3: Catch basin microbiota biotypes identified by PAM clustering**
 * Fig 3A - Script: `Fig3.R`: run code from line `1` to `33`
 * Fig 3B - Script: `Fig3.R`: run code from line '1' to `54`
 * Fig 3C - Script: `Fig3.R`: run code from line '1' to `80`
@@ -37,10 +37,10 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 * Fig 3E - Script: `Fig3.R`: run code from line '1' to `135`
 * Fig 3F - Script: `Fig3.R`: run code from line '1' to `166`
 
-**Fig 4: Bacterial taxa significantly associated with different catch basin variables**
+**Fig. 4: Bacterial taxa significantly associated with different catch basin variables**
 * Fig 4 - Script: `Fig4.R`: run code from line `1` to `193`
 
-**Fig 5: Bacterial community differences by pupal occurrence**
+**Fig. 5: Bacterial community differences by pupal occurrence**
 * Fig 5A - Script: `Fig5.R`: run code from line `1` to `38`
 * Fig 5B - Script: `Fig5.R`: run code from line `1` to `60`
 * Fig 5C - Script: `Fig5.R`: run code from line `1` to `82`
@@ -64,15 +64,15 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 * Script: `misc-analyses.R`: run code from line `1` to `227`
 
 #### Supplementary Information 
-* Fig S1 - Script: `supp-info.R`: run code from line `1` to `31`
-* Fig S2A - Script: `supp-info.R`: run code from line `1` to `61`
-* Fig S2B - Script: `supp-info.R`: run code from line `1` to `80`
-* Fig S2C - Script: `supp-info.R`: run code from line `1` to `98`
-* Fig S3 - Script: `supp-info.R`: run code from line `1` to `109`
-* Fig S4A - Script: `supp-info.R`: run code from line `1` to `128`
-* Fig S4B - Script: `supp-info.R`: run code from line `1` to `143`
-* Fig S5 - Script: `supp-info.R`: run code from line `1` to `185`
-* Fig S6 - Script: `supp-info.R`: run code from line `1` to `260`
+* Fig. S1 - Script: `supp-info.R`: run code from line `1` to `31`
+* Fig. S2A - Script: `supp-info.R`: run code from line `1` to `61`
+* Fig. S2B - Script: `supp-info.R`: run code from line `1` to `80`
+* Fig. S2C - Script: `supp-info.R`: run code from line `1` to `98`
+* Fig. S3 - Script: `supp-info.R`: run code from line `1` to `109`
+* Fig. S4A - Script: `supp-info.R`: run code from line `1` to `128`
+* Fig. S4B - Script: `supp-info.R`: run code from line `1` to `143`
+* Fig. S5 - Script: `supp-info.R`: run code from line `1` to `185`
+* Fig. S6 - Script: `supp-info.R`: run code from line `1` to `260`
 * Table S1A - Script: `supp-info.R`: run code from line `1` to `308`
 * Table S1B - Script: `supp-info.R`: run code from line `1` to `347`
 * Table S2 - File: `input-files/metadata.txt`
