@@ -24,7 +24,7 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 * Fig 1B - Script: `Fig1.R`: run code from line `1` to `27`
 
 **Fig. 2: Bacterial diversity in water sampled from study catch basins**
-* Fig 2A - Script: `Fig2.R`: run code from line `1c to `29`
+* Fig 2A - Script: `Fig2.R`: run code from line `1` to `29`
 * Fig 2B - Script: `Fig2.R`: run code from line `1` to `50`
 * Fig 2C - Script: `Fig2.R`: run code from line `1` to `69`
 * Fig 2D - Script: `Fig2.R`: run code from line `1` to `88`
