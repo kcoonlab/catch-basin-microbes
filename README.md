@@ -17,8 +17,8 @@ Scripts for each analysis are written in R. Each directory contains necessary fi
 	* `cmd enter` from line `1`.
 
 **Before getting started**
-* Run the script `phyloseq-object.R` (code from line `1` to `39`) to generate a phyloseq object from the appropriate qiime artifacts. This object will be referenced in some downstream analyses.
-* **Note**: this script also contains the code used to estimate alpha diversity (ASV richness and Shannon's H index) in each sample (see lines `41` to `47`)
+* Run the script `phyloseq-object.R` (code from line `1` to `42`) to generate a phyloseq object from the appropriate qiime artifacts. This object will be referenced in some downstream analyses.
+* **Note**: this script also contains the code used to estimate alpha diversity (ASV richness and Shannon's H index) in each sample (see lines `46` to `52`)
 
 ## Recreate the manuscript figures, tables, and associated statistical analyses
 Once the repository has been cloned (above), recreate each figure/table/data analysis as follows: 
@@ -42,7 +42,7 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 * Fig 3F - Script: `Fig3.R`: run code from line `1` to `166`
 
 **Fig. 4: Bacterial taxa significantly associated with different catch basin variables**
-* Fig 4 - Script: `Fig4.R`: run code from line `1` to `193`
+* Fig 4 - Script: `Fig4.R`: run code from line `1` to `194`
 
 **Fig. 5: Bacterial community differences by pupal occurrence**
 * Fig 5A - Script: `Fig5.R`: run code from line `1` to `38`
@@ -66,7 +66,7 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 
 #### Miscellaneous data analyses
 * Script: `misc-analyses.R`: run code from line `1` to `227`
-* Script: `biotyping.R`: run code from line `1` to `65`
+* Script: `biotyping.R`: run code from line `1` to `62`
 
 #### Supplementary information 
 * Fig. S1 - Script: `supp-info.R`: run code from line `1` to `31`
