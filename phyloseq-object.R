@@ -6,6 +6,9 @@ library(ggplot2)
 library(qiime2R)
 library(vegan)
 
+## Generate a phyloseq object from the appropriate qiime artifacts. 
+## This object will be referenced in some downstream analyses
+
 pick_new_outgroup <- function(tree.unrooted){
   require(magrittr)
   require(data.table)
@@ -37,6 +40,8 @@ ps.temp <- qza_to_phyloseq("catch-basin-microbes/input-files/table_analysis.qza"
 ps.temp.rerooted <- phyloseq(otu_table(ps.temp), tax_table(ps.temp), sample_data(ps.temp), newlyrootedTree)
 ps.final <- subset_taxa(ps.temp.rerooted, Family != "Mitochondria")
 saveRDS(ps.final,"catch-basin-microbes/input-files/ps.final.rds")
+
+## Alpha diversity estimates (ASV richness and Shannon's H index) for each sample
 
 shannon <- diversity(t(otu_table(ps.final)), "shannon")
 asvfac = factor(rownames(tax_table(ps.final)))
