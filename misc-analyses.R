@@ -5,7 +5,7 @@ library(nlme)
 library(rstatix)
 library(lme4)
 
-## Basins with high average pupal abundance vs. those with highes frequency of pupae over time
+## Correlation between pupal abundance and frequency (data aggregated by basin)
 
 WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data.by.basin <- WQ.data %>%
@@ -18,7 +18,7 @@ WQ.data.by.basin$Basin.flowgroup <- c("MinerEvanstonRammer","MinerEvanstonRammer
 
 cor.test(WQ.data.by.basin$Pupae.abund.avg, WQ.data.by.basin$Pupae.prev, method=c("pearson"))
 
-## Pupal abundances were also generally higher later in the season 
+## Patterns of pupal abundance across early vs. late-season time points
 
 WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data$Sampling.date <- as.Date(WQ.data$Sampling.date, "%m/%d/%y")
