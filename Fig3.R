@@ -1,6 +1,6 @@
-## Fig 3. Catch basin microbiota biotypes identified by PAM clustering
-
 set.seed(123)
+
+## Fig 3. Catch basin microbiota biotypes identified by PAM clustering
 
 library(phyloseq)
 library(RColorBrewer)
@@ -12,7 +12,7 @@ library(nlme)
 
 ## Fig 3A. Taxa bar plots by biotype (phylum level)
 
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 ps.phylum <- tax_glom(ps.final, "Phylum", NArm = TRUE)
 y1 <- ps.phylum
 sample_data(y1)$Biotype[which(sample_data(y1)$Biotype == 1)] <- "A"
