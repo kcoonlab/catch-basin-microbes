@@ -6,7 +6,7 @@ Microbiota composition associates with mosquito productivity outcomes in belowgr
 * Serena Y. Zhao
 * Kerri L. Coon - kerri.coon@wisc.edu
 
-## Analysis Overview 
+## Analysis overview 
 Scripts for each analysis are written in R. Each directory contains necessary files and code to recreate each figure, table, and associated statistical analyses reported in the manuscript. To repeat the analysis, clone the repository, and then run each script. Do not `cd` into the cloned repository. 
 
 **Example**
@@ -16,7 +16,7 @@ Create a new project in RStudio. To run the script to recreate Fig. 1 in the man
 * Install required packages. 
 * `cmd enter` from line `1`.
 
-## Recreate the Manuscript Figures, Tables, and Associated Statistical Analyses
+## Recreate the manuscript figures, tables, and associated statistical analyses
 Once the repository has been cloned (above), recreate each figure/table/data analysis as follows: 
 
 **Fig. 1: Locations of collection sites**
@@ -60,10 +60,10 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 **Table 3: Effects of microbiota diversity on mosquito productivity**
 * Table 3 - Script: `Table3.R`: run code from line `1` to `26`
 
-#### Miscellaneous Data Analyses
+#### Miscellaneous data analyses
 * Script: `misc-analyses.R`: run code from line `1` to `227`
 
-#### Supplementary Information 
+#### Supplementary information 
 * Fig. S1 - Script: `supp-info.R`: run code from line `1` to `31`
 * Fig. S2A - Script: `supp-info.R`: run code from line `1` to `61`
 * Fig. S2B - Script: `supp-info.R`: run code from line `1` to `80`
