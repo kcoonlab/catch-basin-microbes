@@ -7,7 +7,7 @@ library(nlme)
 
 ## Table 1A. Linear regression analyses with data aggregated by basin
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data["Rainfall"][WQ.data["Rainfall"]=="trace"] <- 0.001
 WQ.data$Rainfall <- as.numeric(WQ.data$Rainfall)
 WQ.data.by.basins <- WQ.data %>%
