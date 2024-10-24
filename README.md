@@ -31,11 +31,11 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 
 **Fig 3: Catch basin microbiota biotypes identified by PAM clustering**
 * Fig 3A - Script: `Fig3.R`: run code from line `1` to `33`
-* Fig 3B - Script: `Fig3.R`: run code from line '1' to '54'
-* Fig 3C - Script: `Fig3.R`: run code from line '1' to '80'
-* Fig 3D - Script: `Fig3.R`: run code from line '1' to '103'
-* Fig 3E - Script: `Fig3.R`: run code from line '1' to '135'
-* Fig 3F - Script: `Fig3.R`: run code from line '1' to '166'
+* Fig 3B - Script: `Fig3.R`: run code from line '1' to `54`
+* Fig 3C - Script: `Fig3.R`: run code from line '1' to `80`
+* Fig 3D - Script: `Fig3.R`: run code from line '1' to `103`
+* Fig 3E - Script: `Fig3.R`: run code from line '1' to `135`
+* Fig 3F - Script: `Fig3.R`: run code from line '1' to `166`
 
 **Fig 4: Bacterial taxa significantly associated with different catch basin variables**
 * Fig 4 - Script: `Fig4.R`: run code from line `1` to `193`
