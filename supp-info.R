@@ -1,6 +1,6 @@
-## Supplementary information for: Microbiota composition associates with mosquito productivity outcomes in belowground larval habitats
-
 set.seed(123)
+
+## Supplementary information for: Microbiota composition associates with mosquito productivity outcomes in belowground larval habitats
 
 library(ggplot2)
 library(dplyr)
@@ -13,7 +13,7 @@ library(philr)
 
 ## Fig S1. Pupal ocurrence and abundance over time
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data$Sampling.date <- as.Date(WQ.data$Sampling.date, "%m/%d/%y")
 WQ.data <- subset(WQ.data, Sampling.date > "2021-04-16")
 
@@ -34,7 +34,7 @@ ggplot(data=WQ.data, aes(x=Sampling.date)) +
 
 ## Fig S2A. Pupal occurence by basin type
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data$Sampling.date <- as.Date(WQ.data$Sampling.date, "%m/%d/%y")
 
 WQ.data.by.basin <- WQ.data %>%
@@ -99,7 +99,7 @@ pupae_flowgroup_time
 
 ## Fig S3. Classification tree for biotype cluster assignment of samples
 
-metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
+metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 cols.convert.factor <-c("Sampling.date","Biotype","Basin.type")
 metadata[,cols.convert.factor] <- lapply(metadata[,cols.convert.factor], factor)
 metadata.samples <- subset(metadata, sample_control=="sample")
@@ -144,7 +144,7 @@ shannon.date
 
 ## Fig S5. Principal coordinates analysis of PhILR Euclidean distances
 
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 sample_data(ps.final)$sample.id <- sample_names(ps.final)
 
 # Running with just individual NA samples cut (not final instances of a UCB with an NA anywhere)
@@ -186,7 +186,7 @@ plot.ord.philr
 
 ## Fig S6. Water quality measurements over time
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data$Date <- as.Date(WQ.data$Date, "%m/%d/%y")
 WQ.data$Datefactor <- WQ.data$Date %>% as.factor
 
@@ -259,11 +259,11 @@ rain.date <- ggplot(data=WQ.data,
   xlab(NULL)+ ylab("Rainffinal")+labs(fill="Date")
 rain.date
 
-## Table S1 (See input-files/WQ_Dips_2021_Final.csv for unaggregated data)
+## Table S1 (See catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv for unaggregated data)
 
 ## Table S1A. Fixed basin characteristics along with measures of water quality and mosquito productivity aggregated by basin across the entire sampling period
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data["Rainffinal"][WQ.data["Rainffinal"]=="trace"] <- 0.001
 WQ.data$Rainffinal <- as.numeric(WQ.data$Rainffinal)
 WQ.data.by.basin <- WQ.data %>%
@@ -346,7 +346,7 @@ WQ.data.by.date[sapply(WQ.data.by.date, is.nan)] <- NA
 WQ.data.by.date[sapply(WQ.data.by.date, is.infinite)] <- NA
 WQ.data.by.date <- WQ.data.by.date %>% arrange(factor(Sampling.date, levels = c("4/15/21", "6/4/21", "6/11/21", "6/18/21", "6/25/21", "7/2/21", "7/9/21", "7/16/21", "7/23/21", "7/30/21", "8/6/21", "8/13/21", "8/20/21", "8/27/21", "9/3/21", "9/10/21", "9/17/21", "9/24/21")))
 
-## Table S2 **See input-files/metadata.txt**
+## Table S2 **See catch-basin-microbes/input-files/metadata.txt**
 
 ## Table S3. Results of spatial autocorrelation analyses for testing dependence among basins
 
@@ -354,7 +354,7 @@ WQ.data.by.date <- WQ.data.by.date %>% arrange(factor(Sampling.date, levels = c(
 
 set.seed(123)
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data["Rainffinal"][WQ.data["Rainffinal"]=="trace"] <- 0.001
 WQ.data$Rainffinal <- as.numeric(WQ.data$Rainffinal)
 WQ.data.by.basin <- WQ.data %>%
@@ -404,7 +404,7 @@ Moran.I(WQ.data.by.basin$Pupae.prev, data.dists.inv, na.rm = TRUE)
 Moran.I(WQ.data.by.basin$Pupae.abund.avg, data.dists.inv, na.rm = TRUE)
 Moran.I(WQ.data.by.basin$Methoprene.success, data.dists.inv, na.rm = TRUE) 
 
-metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
+metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
 metadata.byUCB <- metadata %>% 
   group_by(Basin.id) %>%
@@ -425,7 +425,7 @@ Moran.I(data$ASV.richness.avg, data.dists.inv, na.rm = TRUE)
 
 ## Table S3B. Mantel test using PhILR distances between samples aggregated by basin
 
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 ps.final.byUCB <- merge_samples(ps.final,"Basin.id")
 sample_data(ps.final.byUCB)$Basin.type <- c("separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","separate","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined","combined")
 sample_data(ps.final.byUCB)$Basin.flowgroup <- c("MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","DonaldBanta","DonaldBanta","DonaldBanta","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","MinerEvanstonRammer","DonaldBanta","MinerEvanstonRammer","MinerEvanstonRammer","Stratford","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","Stratford","Stratford","Stratford","Stratford","Gibbons","Gibbons","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle","MayfairCarlyle")
@@ -448,7 +448,7 @@ mantel(dist.final.byUCB.philr, data.dists.inv)
 
 ## Table S4A. Linear regression analyses with data aggregated by basin
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data.by.basins <- WQ.data %>%
   group_by(UCB) %>%
   dplyr::summarize(Pupae.avg = mean(Pupae, na.rm=TRUE),
@@ -492,7 +492,7 @@ summary(model)
 
 ## Table S5A. Linear regression analyses with data aggregated by basin
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data.by.basins <- WQ.data %>%
   group_by(UCB) %>%
   dplyr::summarize(Fail.prop = sum(Fail==1, na.rm=TRUE)/sum(Fail>=0,na.rm=TRUE),            
@@ -530,7 +530,7 @@ summary(lm(Fail.prop ~ Sal.avg, data = WQ.data.by.date))
 
 ## Table S6. Effects of water quality on microbiota diversity
 
-metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
+metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
 
 metadata.pH <- subset(metadata, !is.na(pH)==TRUE)
