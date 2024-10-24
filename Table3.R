@@ -4,7 +4,7 @@ set.seed(123)
 
 library(dplyr)
 
-metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
+metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
 metadata.byCB <- metadata %>% 
   group_by(Basin.id) %>%
