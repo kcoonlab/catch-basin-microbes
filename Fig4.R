@@ -1,3 +1,5 @@
+set.seed(123)
+
 ## Fig 4. Bacterial taxa significantly associated with different catch basin variables
 
 library(phyloseq)
@@ -8,8 +10,7 @@ library(gplots)
 
 # Identifying key taxa (Pupal occurrence)
 
-set.seed(123)
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 ps.final.phylum <- tax_glom(ps.final, "Phylum", NArm = TRUE)
 ps.final.phylum.pupaepresence <- subset_samples(ps.final.phylum, !(Pupae.pres =="NA"))
 sample_data(ps.final.phylum.pupaepresence)$Pupae.pres <- as.factor(sample_data(ps.final.phylum.pupaepresence)$Pupae.pres)
