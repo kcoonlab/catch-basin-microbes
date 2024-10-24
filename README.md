@@ -75,7 +75,7 @@ Script: `misc-analyses.R`: run code from line `1` to `227`
 * Fig S6 - Script: `supp-info.R`: run code from line `1` to `260`
 * Table S1A - Script: `supp-info.R`: run code from line `1` to `308`
 * Table S1B - Script: `supp-info.R`: run code from line `1` to `347`
-* Table S2 - File: 'input-files/metadata.txt'
+* Table S2 - File: `input-files/metadata.txt`
 * Table S3A - Script: `supp-info.R`: run code from line `1` to `424`
 * Table S3B - Script: `supp-info.R`: run code from line `1` to `445`
 * Table S4A - Script: `supp-info.R`: run code from line `1` to `460`
