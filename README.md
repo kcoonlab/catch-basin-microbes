@@ -1,4 +1,4 @@
-## Overview 
+![image](https://github.com/user-attachments/assets/97ebdc89-91a7-46bc-bb9d-b79ee317aac4)## Overview 
 **Raw data and scripts for:**
 Microbiota composition associates with mosquito productivity outcomes in belowground larval habitats
 
@@ -7,7 +7,7 @@ Microbiota composition associates with mosquito productivity outcomes in belowgr
 * Kerri L. Coon - kerri.coon@wisc.edu
 
 ## Analysis Overview 
-Scripts for each analysis are written in R. Each directory contains necessary files and code to recreate each figure of the manuscript. To repeat the analysis, clone the repository, and the run each script. Do not `cd` into the cloned repository. 
+Scripts for each analysis are written in R. Each directory contains necessary files and code to recreate each figure, table, and associated statistical analyses reported in the manuscript. To repeat the analysis, clone the repository, and then run each script. Do not `cd` into the cloned repository. 
 
 **Example**
 Create a new project in RStudio. To run the script to recreate Figure 1 in the manuscript: 
@@ -16,8 +16,8 @@ Create a new project in RStudio. To run the script to recreate Figure 1 in the m
 * Install required packages. 
 * `cmd enter` from line `1`.
 
-## Recreate the Manuscript Figures
-Once the repository has been cloned (above), recreate each figure as follows: 
+## Recreate the Manuscript Figures, Tables, and Associated Statistical Analyses
+Once the repository has been cloned (above), recreate each figure/table/data analysis as follows: 
 
 **Fig 1: Locations of collection sites**
 * Fig 1A - Script: `Fig1.R`: run code from line `1` to `15`
@@ -42,12 +42,49 @@ Once the repository has been cloned (above), recreate each figure as follows:
 
 **Fig 5: Bacterial community differences by pupal occurrence**
 * Fig 5A - Script: `Fig5.R`: run code from line `1` to `38`
-* Fig 5B - Script: `Fig5.R`: run code from line `1` to `38` 
+* Fig 5B - Script: `Fig5.R`: run code from line `1` to `60`
+* Fig 5C - Script: `Fig5.R`: run code from line `1` to `82`
+* Fig 5D - Script: `Fig5.R`: run code from line `1` to `104`
+* Fig 5E - Script: `Fig5.R`: run code from line `1` to `109`
+* Fig 5F - Script: `Fig5.R`: run code from line `1` to `166`
 
+**Table 1: Effects of water quality on mosquito productivity**
+* Table 1A - Script: `Table1.R`: run code from line `1` to `53`
+* Table 1B - Script: `Table1.R`: run code from line `1` to `102`
+* Table 1C - Script: `Table1.R`: run code from line `1` to `152`
 
-#### Supplementary Figures 
-* Fig S1 - Script: `01_Genome_QC/plot_QUAST.R`: run code from line `1` to `55`
+**Table 2: Effects of sampling date, water quality, and mosquito productivity on microbiota diversity**
+* Table 2A - Script: `Table2.R`: run code from line `1` to `67`
+* Table 2B - Script: `Table2.R`: run code from line `1` to `85`
+  
+**Table 3: Effects of microbiota diversity on mosquito productivity**
+* Table 3 - Script: `Table3.R`: run code from line `1` to `26`
+
+#### Miscellaneous Data Analyses
+Script: `misc-analyses.R`: run code from line `1` to `227`
+
+#### Supplementary Information 
+* Fig S1 - Script: `supp-info.R`: run code from line `1` to `31`
+* Fig S2A - Script: `supp-info.R`: run code from line `1` to `61`
+* Fig S2B - Script: `supp-info.R`: run code from line `1` to `80`
+* Fig S2C - Script: `supp-info.R`: run code from line `1` to `98`
+* Fig S3 - Script: `supp-info.R`: run code from line `1` to `109`
+* Fig S4A - Script: `supp-info.R`: run code from line `1` to `128`
+* Fig S4B - Script: `supp-info.R`: run code from line `1` to `143`
+* Fig S5 - Script: `supp-info.R`: run code from line `1` to `185`
+* Fig S6 - Script: `supp-info.R`: run code from line `1` to `260`
+* Table S1A - Script: `supp-info.R`: run code from line `1` to `308`
+* Table S1B - Script: `supp-info.R`: run code from line `1` to `347`
+* Table S2 - File: 'input-files/metadata.txt'
+* Table S3A - Script: `supp-info.R`: run code from line `1` to `424`
+* Table S3B - Script: `supp-info.R`: run code from line `1` to `445`
+* Table S4A - Script: `supp-info.R`: run code from line `1` to `460`
+* Table S4B - Script: `supp-info.R`: run code from line `1` to `473`
+* Table S4C - Script: `supp-info.R`: run code from line `1` to `489`
+* Table S5A - Script: `supp-info.R`: run code from line `1` to `510`
+* Table S5B - Script: `supp-info.R`: run code from line `1` to `529`
+* Table S6 - Script: `supp-info.R`: run code from line `1` to `576`
+* Table S7A - Script: `Table2.R`: run code from line `1` to `67`
+* Table S7B - Script: `Table2.R`: run code from line `1` to `85`
 
 ## Citation 
-
-
