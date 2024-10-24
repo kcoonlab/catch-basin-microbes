@@ -24,8 +24,8 @@ Scripts for each analysis are written in R. Each directory contains necessary fi
 Once the repository has been cloned (above), recreate each figure/table/data analysis as follows: 
 
 **Fig. 1: Locations of collection sites**
-* Fig 1A - Script: `Fig1.R`: run code from line `1` to `15`
-* Fig 1B - Script: `Fig1.R`: run code from line `1` to `27`
+* Fig 1A - Script: `Fig1.R`: run code from line `1` to `17`
+* Fig 1B - Script: `Fig1.R`: run code from line `1` to `29`
 
 **Fig. 2: Bacterial diversity in water sampled from study catch basins**
 * Fig 2A - Script: `Fig2.R`: run code from line `1` to `29`
@@ -66,6 +66,7 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 
 #### Miscellaneous data analyses
 * Script: `misc-analyses.R`: run code from line `1` to `227`
+* Script: `biotyping.R`: run code from line `1` to `65`
 
 #### Supplementary information 
 * Fig. S1 - Script: `supp-info.R`: run code from line `1` to `31`
