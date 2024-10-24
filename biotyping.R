@@ -11,7 +11,7 @@ library(ade4)
 library(philr)
 
 # read in distance matrix
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 
 # Euclidean distance of philr transformation
 # take phylogenetic info into account with isometric log-ratio transformation
