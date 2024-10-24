@@ -7,7 +7,7 @@ library(lme4)
 
 ## Basins with high average pupal abundance vs. those with highes frequency of pupae over time
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data.by.basin <- WQ.data %>%
   group_by(Basin.id) %>%
   dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
@@ -20,7 +20,7 @@ cor.test(WQ.data.by.basin$Pupae.abund.avg, WQ.data.by.basin$Pupae.prev, method=c
 
 ## Pupal abundances were also generally higher later in the season 
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data$Sampling.date <- as.Date(WQ.data$Sampling.date, "%m/%d/%y")
 WQ.data <- WQ.data %>% mutate(season = ifelse(Sampling.date < "2021-06-26", "early", "late"))
 WQ.data.pupaepresent <- subset(WQ.data, !is.na(Pupae.pres)==TRUE)
@@ -35,7 +35,7 @@ anova(model)
 
 ## Both the season-wide frequency and abundance of pupae did not significantly differ between basins as a function of basin type or flow group 
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data.by.basin <- WQ.data %>%
   group_by(Basin.id) %>%
   dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
@@ -55,7 +55,7 @@ summary(anova.basintype)
 
 ## Season-wide treatment success did not differ between combined and separated basins or among basin flow groups
 
-WQ.data <- read.csv("input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
+WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data.by.basin <- WQ.data %>%
   group_by(Basin.id) %>%
   dplyr::summarize(Pupae.abund.avg = mean(Pupae.abund, na.rm=TRUE),
@@ -72,7 +72,7 @@ summary(anova.flowgroup)
 
 ## Combined and separated basin type did not affect biotype assignment, as most basins switched between biotypes at some point in the season
 
-metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
+metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
 #metadata$Datefactor <- metadata$Sampling.date %>% as.factor
 metadata <- subset(metadata, !is.na(Biotype)==TRUE)
@@ -92,7 +92,7 @@ summary(model)
 
 ## Alpha diversity in basins (as measured by Shannon’s H index) differed among sampling dates 
 
-metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
+metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
 rm_anova <- anova_test(
   data = metadata,
@@ -105,7 +105,7 @@ get_anova_table(rm_anova)
 
 ## Both separated and combined basins, as well as basins assigned to different flow groups, harbored bacterial communities characterized by Shannon index values that varied somewhat unpredictably but were overall statistically similar to one another over the season
 
-metadata <- read.table("input-files/metadata.txt", sep="\t", header=TRUE)
+metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
 rm_anova <- anova_test(
   data = metadata,
@@ -129,7 +129,7 @@ get_anova_table(rm_anova)
 
 ## Several other genera in the Proteobacteria were significantly associated with pupal occurrence
 
-ps.all <- readRDS("input-files/ps.all.rds")
+ps.all <- readRDS("catch-basin-microbes/input-files/ps.all.rds")
 ps.all.genus <- tax_glom(ps.all, "Genus", NArm = TRUE)
 #minTotRelAbun = 1e-5
 #x = taxa_sums(ps.all.genus)
@@ -155,7 +155,7 @@ aldex.results.sig.tax.pupaepa
 
 ##
 
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 ps.final.phylum <- tax_glom(ps.final, "Phylum", NArm = TRUE)
 
 data <-
@@ -223,5 +223,4 @@ MySummary <- genus.df2 %>%
   group_by(season) %>%
   summarize(max_abund = max(Abundance, na.rm=TRUE)) 
 head(MySummary)
-print.data.frame(MySummary)
-                              
+print.data.frame(MySummary)                 
