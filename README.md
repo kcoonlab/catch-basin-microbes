@@ -16,6 +16,10 @@ Create a new project in RStudio. To run the script to recreate Fig. 1 in the man
 * Install required packages. 
 * `cmd enter` from line `1`.
 
+**Before getting started**
+* Run the script `phyloseq-object.R` (code from line `1` to `39`) to generate a phyloseq object from the appropriate qiime artifacts. This object will be referenced in some downstream analyses.
+* Note: this script also contains the code used to estimate alpha diversity (ASV richness and Shannon's H index) in each sample (see lines `41` to `47`)
+
 ## Recreate the manuscript figures, tables, and associated statistical analyses
 Once the repository has been cloned (above), recreate each figure/table/data analysis as follows: 
 
