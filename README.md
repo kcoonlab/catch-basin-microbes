@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/97ebdc89-91a7-46bc-bb9d-b79ee317aac4)## Overview 
+## Overview 
 **Raw data and scripts for:**
 Microbiota composition associates with mosquito productivity outcomes in belowground larval habitats
 
