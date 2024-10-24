@@ -4,7 +4,7 @@ library(ggmap)
 
 ## Fig 1A. Map of study jurisdiction
 
-sites <- read.table("input-files/metadata.txt", sep = "\t", header = TRUE)
+sites <- read.table("catch-basin-microbes/input-files/metadata.txt", sep = "\t", header = TRUE)
 sites <- subset(sites,sample_control=="sample")
 ll_means <- sapply(sites[91:92], mean, na.rm=TRUE) #point to lat and lon columns
 map_region <- get_map(location = ll_means,  maptype = "terrain", source = "google", zoom = 6) 
