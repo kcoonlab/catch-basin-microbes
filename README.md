@@ -10,11 +10,11 @@ Microbiota composition associates with mosquito productivity outcomes in belowgr
 Scripts for each analysis are written in R. Each directory contains necessary files and code to recreate each figure, table, and associated statistical analyses reported in the manuscript. To repeat the analysis, clone the repository, and then run each script. Do not `cd` into the cloned repository. 
 
 **Example**
-Create a new project in RStudio. To run the script to recreate Fig. 1 in the manuscript: 
-* Navigate to the terminal window and `git clone https://github.com/kcoonlab/catch-basin-microbes`.
-* Open the script `Fig1.R` from the files panel window.
-* Install required packages. 
-* `cmd enter` from line `1`.
+* Create a new project in RStudio. To run the script to recreate Fig. 1 in the manuscript: 
+	* Navigate to the terminal window and `git clone https://github.com/kcoonlab/catch-basin-microbes`.
+	* Open the script `Fig1.R` from the files panel window.
+	* Install required packages. 
+	* `cmd enter` from line `1`.
 
 **Before getting started**
 * Run the script `phyloseq-object.R` (code from line `1` to `39`) to generate a phyloseq object from the appropriate qiime artifacts. This object will be referenced in some downstream analyses.
