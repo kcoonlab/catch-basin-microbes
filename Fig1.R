@@ -1,3 +1,5 @@
+set.seed(123)
+
 ## Fig 1. Locations of collection sites
 
 library(ggmap)
