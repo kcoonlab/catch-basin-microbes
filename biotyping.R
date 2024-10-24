@@ -59,7 +59,4 @@ s.class(obs.pcoa$li, fac=as.factor(data.cluster), grid=F)
 s.class(obs.pcoa$li, fac=as.factor(data.cluster), grid=F, cell=0, cstar=0, col=c(3,2,4,7)) 
 
 # retrieving assigned cluster
-# obs.pcoa
-# head(obs.pcoa$l1)
-# head(obs.pcoa$li)
 cluster.assignments <- cbind(data.cluster,obs.pcoa$li)
