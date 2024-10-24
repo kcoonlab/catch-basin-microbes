@@ -1,6 +1,6 @@
-## Fig 5. Bacterial community differences by pupal occurrence
-
 set.seed(123)
+
+## Fig 5. Bacterial community differences by pupal occurrence
 
 library(phyloseq)
 library(ggplot2)
@@ -13,7 +13,7 @@ library(nlme)
 
 ## Fig 5A. ASVs by pupae presence/absence
 
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 metadata <- data.frame(sample_data(ps.final))
 metadata <- subset(metadata, sample_control=="sample")
 metadata$Pupae.pres <- as.factor(metadata$Pupae.pres)
