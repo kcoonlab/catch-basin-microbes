@@ -74,17 +74,7 @@ summary(anova.flowgroup)
 
 metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
-#metadata$Datefactor <- metadata$Sampling.date %>% as.factor
 metadata <- subset(metadata, !is.na(Biotype)==TRUE)
-#metadata = metadata %>%
-#     arrange(Basin.id, Datefactor)
-
-#model = lme(Biotype ~ Basin.type,
-#              random = ~1|Basin.id, 
-#              correlation = corAR1(), 
-#              data = metadata)
-#anova(model)
-
 metadata <- metadata %>% mutate(Biotype.new = ifelse(Biotype == 1, 0, 1))
 model = glmer(Biotype.new ~ Basin.type + (1 | Basin.id), data  = metadata, family = binomial)
 model = glm(Biotype.new ~ Basin.type, data  = metadata, family = binomial)
@@ -131,11 +121,6 @@ get_anova_table(rm_anova)
 
 ps.all <- readRDS("catch-basin-microbes/input-files/ps.all.rds")
 ps.all.genus <- tax_glom(ps.all, "Genus", NArm = TRUE)
-#minTotRelAbun = 1e-5
-#x = taxa_sums(ps.all.genus)
-#keepTaxa = (x / sum(x)) > minTotRelAbun
-#prunedSet = prune_taxa(keepTaxa, ps.all.genus)
-
 ps.all.genus <- subset_samples(ps.all.genus, !(Pupae_pa == "NA"))
 sample_data(ps.all.genus)$Pupae_pa <- as.factor(sample_data(ps.all.genus)$Pupae_pa)
 
