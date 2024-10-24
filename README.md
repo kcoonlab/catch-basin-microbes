@@ -65,7 +65,7 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 * Table 3 - Script: `Table3.R`: run code from line `1` to `26`
 
 #### Miscellaneous data analyses
-* Script: `misc-analyses.R`: run code from line `1` to `227`
+* Script: `misc-analyses.R`: run code from line `1` to `209`
 * Script: `biotyping.R`: run code from line `1` to `62`
 
 #### Supplementary information 
