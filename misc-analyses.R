@@ -33,7 +33,7 @@ model = lme(sqrt(Pupae.abund) ~ season,
               data = WQ.data.pupaepresent)
 anova(model)
 
-## Both the season-wide frequency and abundance of pupae did not significantly differ between basins as a function of basin type or flow group 
+## Season-wide frequency and abundance of pupae between combined and separated basins or among basin flow groups
 
 WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data.by.basin <- WQ.data %>%
@@ -53,7 +53,7 @@ summary(anova.basintype)
 anova.basintype <- aov(Pupae.abund.avg ~ Basin.flowgroup, data=WQ.data.by.basin)
 summary(anova.basintype)
 
-## Season-wide treatment success did not differ between combined and separated basins or among basin flow groups
+## Season-wide treatment success between combined and separated basins or among basin flow groups
 
 WQ.data <- read.csv("catch-basin-microbes/input-files/WQ_Dips_2021_Final.csv",sep=",", header=TRUE)
 WQ.data.by.basin <- WQ.data %>%
@@ -70,7 +70,7 @@ summary(anova.basintype)
 anova.flowgroup <- aov(Methoprene.fail.rate ~ Basin.flowgroup, data=WQ.data.by.basin)
 summary(anova.flowgroup)
 
-## Combined and separated basin type did not affect biotype assignment, as most basins switched between biotypes at some point in the season
+## Impact of basin type (combined vs. separated) on biotype assignment
 
 metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
@@ -80,7 +80,7 @@ model = glmer(Biotype.new ~ Basin.type + (1 | Basin.id), data  = metadata, famil
 model = glm(Biotype.new ~ Basin.type, data  = metadata, family = binomial)
 summary(model)
 
-## Alpha diversity in basins (as measured by Shannon’s H index) differed among sampling dates 
+## Patterns in alpha diversity (as measured by Shannon’s H index) among basins across different sampling dates 
 
 metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
@@ -93,8 +93,7 @@ rm_anova <- anova_test(
 )
 get_anova_table(rm_anova)
 
-## Both separated and combined basins, as well as basins assigned to different flow groups, harbored bacterial communities characterized by Shannon index values that varied somewhat unpredictably but were overall statistically similar to one another over the season
-
+## Patterns in alpha diversity (as measured by Shannon’s H index) among basins assigned to different basin types (separated vs. combined) and flow groups
 metadata <- read.table("catch-basin-microbes/input-files/metadata.txt", sep="\t", header=TRUE)
 metadata <- subset(metadata, sample_control=="sample")
 rm_anova <- anova_test(
@@ -117,7 +116,7 @@ rm_anova <- anova_test(
 )
 get_anova_table(rm_anova)
 
-## Several other genera in the Proteobacteria were significantly associated with pupal occurrence
+## Bacterial genera significantly associated with pupal occurrence
 
 ps.all <- readRDS("catch-basin-microbes/input-files/ps.all.rds")
 ps.all.genus <- tax_glom(ps.all, "Genus", NArm = TRUE)
@@ -138,7 +137,7 @@ aldex.results.effectsize.tax <- left_join(aldex.results.effectsize, taxa_info)
 aldex.results.sig.tax.pupaepa <- left_join(aldex.results.sig, taxa_info)
 aldex.results.sig.tax.pupaepa
 
-##
+## Relative abundance of rare vs. abundant taxa in different samples
 
 ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 ps.final.phylum <- tax_glom(ps.final, "Phylum", NArm = TRUE)
@@ -172,7 +171,6 @@ data %>%
   ungroup() %>%
   count(Genus, name = "n_samples") %>%
   arrange(-n_samples)
-
 
 y1 <- ps.final
 y2 <- transform_sample_counts(y1, function(x) x/sum(x)) #get abundance in %
