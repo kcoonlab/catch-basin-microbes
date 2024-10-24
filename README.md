@@ -1,11 +1,9 @@
 ## Overview 
-**MosAIC: Mosquito-Associated Isolate Collection**
-MosAIC (Mosquito-Associated Isolate Collection), a resource consisting of 392 bacterial isolates from mosquitoes. These isolates come with extensive metadata and high-quality draft genome assemblies, publicly available for use by the scientific community. Please see https://kcoonlab.bact.wisc.edu/mosaic/ for more information. 
+**Raw data and scripts for:**
+Microbiota composition associates with mosquito productivity outcomes in belowground larval habitats
 
 ## Authors 
-* Aidan Foo - aidanfoo96@gmail.com
-* Laura Brettell - L.E.Brettell1@salford.ac.uk
-* Eva Heinz - eva.heinz@strath.ac.uk
+* Serena Zhao
 * Kerri Coon - kerri.coon@wisc.edu
 
 ## Analysis Overview 
