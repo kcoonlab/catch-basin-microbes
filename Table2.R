@@ -11,7 +11,7 @@ library(tidyr)
 
 ## Table 2A  PERMANOVA tests using PhILR distances between samples
 
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 sample_data(ps.final)$sample.id <- sample_names(ps.final)
 
 # running with just individual NA samples cut (not final instances of a UCB with an NA anywhere)
