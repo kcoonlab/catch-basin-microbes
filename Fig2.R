@@ -1,6 +1,6 @@
-## Fig 2. Bacterial diversity in water sampled from study catch basins
-
 set.seed(123)
+
+## Fig 2. Bacterial diversity in water sampled from study catch basins
 
 library(phyloseq)
 library(RColorBrewer)
@@ -8,7 +8,7 @@ library(ggplot2)
 
 ## Fig 2A. Taxa bar plots by basin (phylum level)
 
-ps.final <- readRDS("input-files/ps.final.rds")
+ps.final <- readRDS("catch-basin-microbes/input-files/ps.final.rds")
 ps.phylum <- tax_glom(ps.final, "Phylum", NArm = TRUE)
 y1 <- ps.phylum
 y2 <- merge_samples(y1, "Basin.id") # merge samples by basin
