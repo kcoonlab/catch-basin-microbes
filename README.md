@@ -93,5 +93,5 @@ Once the repository has been cloned (above), recreate each figure/table/data ana
 * Table S7B - Script: `Table2.R`: run code from line `1` to `85`
 
 ## Citation 
-Zhao SY, Sommer AJ, Bartlett D, Harbison JE, Irwin P, Coon KL. Microbiota composition associates with mosquito productivity outcomes in belowground larval habitats.
+Zhao SY, Sommer AJ, Bartlett D, Harbison JE, Irwin P, Coon KL. 2025. Microbiota composition associates with mosquito productivity outcomes in belowground larval habitats. Molecular Ecology, 34(2):e17614.
 
